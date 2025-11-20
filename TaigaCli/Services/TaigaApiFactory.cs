@@ -4,14 +4,22 @@ using TaigaCli.Handlers;
 
 namespace TaigaCli.Services;
 
-public class TaigaApiFactory(AuthService authService, AuthHeaderHandler authHeaderHandler)
+public class TaigaApiFactory(AuthService authService)
 {
     public ITaigaApi Create() => Create(authService.GetApiBaseUrl());
 
-    public ITaigaApi Create(string url) =>
-        RestService.For<ITaigaApi>(new HttpClient(authHeaderHandler)
+    public ITaigaApi Create(string url)
+    {
+        // Create a new handler instance for each API client
+        var handler = new AuthHeaderHandler(authService)
+        {
+            InnerHandler = new HttpClientHandler()
+        };
+        
+        return RestService.For<ITaigaApi>(new HttpClient(handler)
         {
             BaseAddress = new Uri(url)
         });
+    }
 }
 

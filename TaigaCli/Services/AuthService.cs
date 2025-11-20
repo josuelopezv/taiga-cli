@@ -33,14 +33,15 @@ public class AuthService
             _config = new Config();
     }
 
-    private void SaveConfig()
+    private void SaveConfig(bool showMessage = true)
     {
         if (!Directory.Exists(_configDirectory))
             Directory.CreateDirectory(_configDirectory);
 
         var json = JsonConvert.SerializeObject(_config, Formatting.Indented);
         File.WriteAllText(_configFilePath, json);
-        Console.WriteLine($"Config saved to {_configFilePath}");
+        if (showMessage)
+            Console.WriteLine($"Config saved to {_configFilePath}");
     }
 
     public void SaveToken(string token)
@@ -65,7 +66,7 @@ public class AuthService
     {
         _config ??= new Config();
         _config.ApiBaseUrl = apiBaseUrl;
-        SaveConfig();
+        SaveConfig(false);
     }
 
     public string GetApiBaseUrl() => _config?.ApiBaseUrl ?? "https://api.taiga.io/api/v1";

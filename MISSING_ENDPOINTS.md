@@ -15,27 +15,27 @@ This document tracks Taiga API endpoints that are not yet implemented in the CLI
 - [ ] POST `/auth/change-password` - Change password
 - [ ] POST `/auth/change-password-from-recovery` - Change password from recovery token
 - [x] GET `/users/me` - Get current user
-- [ ] GET `/users/{id}` - Get user by ID
-- [ ] GET `/users` - List users
-- [ ] PATCH `/users/{id}` - Update user
-- [ ] GET `/users/{id}/stats` - Get user statistics
+- [x] GET `/users/{id}` - Get user by ID
+- [x] GET `/users` - List users
+- [x] PATCH `/users/{id}` - Update user
+- [x] GET `/users/{id}/stats` - Get user statistics
 
 ## Projects
 
 - [x] GET `/projects` - List projects
-- [ ] GET `/projects/{id}` - Get project by ID
-- [ ] POST `/projects` - Create project
-- [ ] PATCH `/projects/{id}` - Update project
-- [ ] DELETE `/projects/{id}` - Delete project
-- [ ] GET `/projects/{id}/stats` - Get project statistics
-- [ ] GET `/projects/{id}/modules` - Get project modules
-- [ ] PATCH `/projects/{id}/modules` - Update project modules
-- [ ] GET `/projects/{id}/memberships` - Get project memberships
-- [ ] POST `/projects/{id}/memberships` - Create project membership
-- [ ] GET `/projects/{id}/memberships/{membershipId}` - Get membership
-- [ ] PATCH `/projects/{id}/memberships/{membershipId}` - Update membership
-- [ ] DELETE `/projects/{id}/memberships/{membershipId}` - Delete membership
-- [ ] GET `/projects/{id}/roles` - Get project roles
+- [x] GET `/projects/{id}` - Get project by ID
+- [x] POST `/projects` - Create project
+- [x] PATCH `/projects/{id}` - Update project
+- [x] DELETE `/projects/{id}` - Delete project
+- [x] GET `/projects/{id}/stats` - Get project statistics
+- [x] GET `/projects/{id}/modules` - Get project modules
+- [x] PATCH `/projects/{id}/modules` - Update project modules
+- [x] GET `/projects/{id}/memberships` - Get project memberships
+- [x] POST `/projects/{id}/memberships` - Create project membership
+- [x] GET `/projects/{id}/memberships/{membershipId}` - Get membership
+- [x] PATCH `/projects/{id}/memberships/{membershipId}` - Update membership
+- [x] DELETE `/projects/{id}/memberships/{membershipId}` - Delete membership
+- [x] GET `/projects/{id}/roles` - Get project roles
 - [ ] GET `/projects/{id}/fans` - Get project fans
 - [ ] POST `/projects/{id}/fans` - Add project fan
 - [ ] DELETE `/projects/{id}/fans/{userId}` - Remove project fan
@@ -53,15 +53,15 @@ This document tracks Taiga API endpoints that are not yet implemented in the CLI
 ## User Stories
 
 - [x] GET `/userstories` - List user stories
-- [ ] GET `/userstories/{id}` - Get user story by ID
-- [ ] POST `/userstories` - Create user story
-- [ ] PATCH `/userstories/{id}` - Update user story
-- [ ] DELETE `/userstories/{id}` - Delete user story
-- [ ] GET `/userstories/{id}/attachments` - Get user story attachments
-- [ ] POST `/userstories/{id}/attachments` - Upload attachment
-- [ ] GET `/userstories/{id}/attachments/{attachmentId}` - Get attachment
-- [ ] DELETE `/userstories/{id}/attachments/{attachmentId}` - Delete attachment
-- [ ] GET `/userstories/{id}/history` - Get user story history
+- [x] GET `/userstories/{id}` - Get user story by ID
+- [x] POST `/userstories` - Create user story
+- [x] PATCH `/userstories/{id}` - Update user story
+- [x] DELETE `/userstories/{id}` - Delete user story
+- [x] GET `/userstories/{id}/attachments` - Get user story attachments
+- [x] POST `/userstories/{id}/attachments` - Upload attachment
+- [x] GET `/userstories/{id}/attachments/{attachmentId}` - Get attachment
+- [x] DELETE `/userstories/{id}/attachments/{attachmentId}` - Delete attachment
+- [x] GET `/userstories/{id}/history` - Get user story history
 - [ ] GET `/userstories/{id}/upvote` - Upvote user story
 - [ ] POST `/userstories/{id}/upvote` - Add upvote
 - [ ] DELETE `/userstories/{id}/upvote` - Remove upvote
@@ -76,16 +76,16 @@ This document tracks Taiga API endpoints that are not yet implemented in the CLI
 
 ## Tasks
 
-- [ ] GET `/tasks` - List tasks
-- [ ] GET `/tasks/{id}` - Get task by ID
-- [ ] POST `/tasks` - Create task
-- [ ] PATCH `/tasks/{id}` - Update task
-- [ ] DELETE `/tasks/{id}` - Delete task
-- [ ] GET `/tasks/{id}/attachments` - Get task attachments
-- [ ] POST `/tasks/{id}/attachments` - Upload attachment
-- [ ] GET `/tasks/{id}/attachments/{attachmentId}` - Get attachment
-- [ ] DELETE `/tasks/{id}/attachments/{attachmentId}` - Delete attachment
-- [ ] GET `/tasks/{id}/history` - Get task history
+- [x] GET `/tasks` - List tasks
+- [x] GET `/tasks/{id}` - Get task by ID
+- [x] POST `/tasks` - Create task
+- [x] PATCH `/tasks/{id}` - Update task
+- [x] DELETE `/tasks/{id}` - Delete task
+- [x] GET `/tasks/{id}/attachments` - Get task attachments
+- [x] POST `/tasks/{id}/attachments` - Upload attachment
+- [x] GET `/tasks/{id}/attachments/{attachmentId}` - Get attachment
+- [x] DELETE `/tasks/{id}/attachments/{attachmentId}` - Delete attachment
+- [x] GET `/tasks/{id}/history` - Get task history
 - [ ] GET `/tasks/{id}/upvote` - Upvote task
 - [ ] POST `/tasks/{id}/upvote` - Add upvote
 - [ ] DELETE `/tasks/{id}/upvote` - Remove upvote
@@ -98,16 +98,16 @@ This document tracks Taiga API endpoints that are not yet implemented in the CLI
 
 ## Issues
 
-- [ ] GET `/issues` - List issues
-- [ ] GET `/issues/{id}` - Get issue by ID
-- [ ] POST `/issues` - Create issue
-- [ ] PATCH `/issues/{id}` - Update issue
-- [ ] DELETE `/issues/{id}` - Delete issue
-- [ ] GET `/issues/{id}/attachments` - Get issue attachments
-- [ ] POST `/issues/{id}/attachments` - Upload attachment
-- [ ] GET `/issues/{id}/attachments/{attachmentId}` - Get attachment
-- [ ] DELETE `/issues/{id}/attachments/{attachmentId}` - Delete attachment
-- [ ] GET `/issues/{id}/history` - Get issue history
+- [x] GET `/issues` - List issues
+- [x] GET `/issues/{id}` - Get issue by ID
+- [x] POST `/issues` - Create issue
+- [x] PATCH `/issues/{id}` - Update issue
+- [x] DELETE `/issues/{id}` - Delete issue
+- [x] GET `/issues/{id}/attachments` - Get issue attachments
+- [x] POST `/issues/{id}/attachments` - Upload attachment
+- [x] GET `/issues/{id}/attachments/{attachmentId}` - Get attachment
+- [x] DELETE `/issues/{id}/attachments/{attachmentId}` - Delete attachment
+- [x] GET `/issues/{id}/history` - Get issue history
 - [ ] GET `/issues/{id}/upvote` - Upvote issue
 - [ ] POST `/issues/{id}/upvote` - Add upvote
 - [ ] DELETE `/issues/{id}/upvote` - Remove upvote
@@ -120,74 +120,74 @@ This document tracks Taiga API endpoints that are not yet implemented in the CLI
 
 ## Epics
 
-- [ ] GET `/epics` - List epics
-- [ ] GET `/epics/{id}` - Get epic by ID
-- [ ] POST `/epics` - Create epic
-- [ ] PATCH `/epics/{id}` - Update epic
-- [ ] DELETE `/epics/{id}` - Delete epic
-- [ ] GET `/epics/{id}/attachments` - Get epic attachments
-- [ ] POST `/epics/{id}/attachments` - Upload attachment
-- [ ] GET `/epics/{id}/attachments/{attachmentId}` - Get attachment
-- [ ] DELETE `/epics/{id}/attachments/{attachmentId}` - Delete attachment
-- [ ] GET `/epics/{id}/history` - Get epic history
-- [ ] GET `/epics/{id}/related-userstories` - Get related user stories
-- [ ] POST `/epics/{id}/related-userstories` - Add related user story
-- [ ] DELETE `/epics/{id}/related-userstories/{userStoryId}` - Remove related user story
+- [x] GET `/epics` - List epics
+- [x] GET `/epics/{id}` - Get epic by ID
+- [x] POST `/epics` - Create epic
+- [x] PATCH `/epics/{id}` - Update epic
+- [x] DELETE `/epics/{id}` - Delete epic
+- [x] GET `/epics/{id}/attachments` - Get epic attachments
+- [x] POST `/epics/{id}/attachments` - Upload attachment
+- [x] GET `/epics/{id}/attachments/{attachmentId}` - Get attachment
+- [x] DELETE `/epics/{id}/attachments/{attachmentId}` - Delete attachment
+- [x] GET `/epics/{id}/history` - Get epic history
+- [x] GET `/epics/{id}/related-userstories` - Get related user stories
+- [x] POST `/epics/{id}/related-userstories` - Add related user story
+- [x] DELETE `/epics/{id}/related-userstories/{userStoryId}` - Remove related user story
 
 ## Milestones (Sprints)
 
-- [ ] GET `/milestones` - List milestones
-- [ ] GET `/milestones/{id}` - Get milestone by ID
-- [ ] POST `/milestones` - Create milestone
-- [ ] PATCH `/milestones/{id}` - Update milestone
-- [ ] DELETE `/milestones/{id}` - Delete milestone
-- [ ] GET `/milestones/{id}/stats` - Get milestone statistics
-- [ ] GET `/milestones/{id}/burndown` - Get burndown chart data
-- [ ] GET `/milestones/{id}/userstories` - Get milestone user stories
-- [ ] POST `/milestones/{id}/userstories` - Add user story to milestone
-- [ ] DELETE `/milestones/{id}/userstories/{userStoryId}` - Remove user story from milestone
+- [x] GET `/milestones` - List milestones
+- [x] GET `/milestones/{id}` - Get milestone by ID
+- [x] POST `/milestones` - Create milestone
+- [x] PATCH `/milestones/{id}` - Update milestone
+- [x] DELETE `/milestones/{id}` - Delete milestone
+- [x] GET `/milestones/{id}/stats` - Get milestone statistics
+- [x] GET `/milestones/{id}/burndown` - Get burndown chart data
+- [x] GET `/milestones/{id}/userstories` - Get milestone user stories
+- [x] POST `/milestones/{id}/userstories` - Add user story to milestone
+- [x] DELETE `/milestones/{id}/userstories/{userStoryId}` - Remove user story from milestone
 
 ## Wiki
 
-- [ ] GET `/wiki` - List wiki pages
-- [ ] GET `/wiki/{id}` - Get wiki page by ID
-- [ ] POST `/wiki` - Create wiki page
-- [ ] PATCH `/wiki/{id}` - Update wiki page
-- [ ] DELETE `/wiki/{id}` - Delete wiki page
-- [ ] GET `/wiki/{id}/attachments` - Get wiki page attachments
-- [ ] POST `/wiki/{id}/attachments` - Upload attachment
-- [ ] GET `/wiki/{id}/attachments/{attachmentId}` - Get attachment
-- [ ] DELETE `/wiki/{id}/attachments/{attachmentId}` - Delete attachment
-- [ ] GET `/wiki/{id}/history` - Get wiki page history
+- [x] GET `/wiki` - List wiki pages
+- [x] GET `/wiki/{id}` - Get wiki page by ID
+- [x] POST `/wiki` - Create wiki page
+- [x] PATCH `/wiki/{id}` - Update wiki page
+- [x] DELETE `/wiki/{id}` - Delete wiki page
+- [x] GET `/wiki/{id}/attachments` - Get wiki page attachments
+- [x] POST `/wiki/{id}/attachments` - Upload attachment
+- [x] GET `/wiki/{id}/attachments/{attachmentId}` - Get attachment
+- [x] DELETE `/wiki/{id}/attachments/{attachmentId}` - Delete attachment
+- [x] GET `/wiki/{id}/history` - Get wiki page history
 
 ## Webhooks
 
-- [ ] GET `/webhooks` - List webhooks
-- [ ] GET `/webhooks/{id}` - Get webhook by ID
-- [ ] POST `/webhooks` - Create webhook
-- [ ] PATCH `/webhooks/{id}` - Update webhook
-- [ ] DELETE `/webhooks/{id}` - Delete webhook
-- [ ] POST `/webhooks/{id}/test` - Test webhook
-- [ ] GET `/webhooks/{id}/logs` - Get webhook logs
+- [x] GET `/webhooks` - List webhooks
+- [x] GET `/webhooks/{id}` - Get webhook by ID
+- [x] POST `/webhooks` - Create webhook
+- [x] PATCH `/webhooks/{id}` - Update webhook
+- [x] DELETE `/webhooks/{id}` - Delete webhook
+- [x] POST `/webhooks/{id}/test` - Test webhook
+- [x] GET `/webhooks/{id}/logs` - Get webhook logs
 
 ## Notifications
 
-- [ ] GET `/notifications` - List notifications
-- [ ] GET `/notifications/{id}` - Get notification by ID
-- [ ] PATCH `/notifications/{id}` - Mark notification as read
-- [ ] PATCH `/notifications/read` - Mark all notifications as read
-- [ ] GET `/notifications/unread` - Get unread notifications count
+- [x] GET `/notifications` - List notifications
+- [x] GET `/notifications/{id}` - Get notification by ID
+- [x] PATCH `/notifications/{id}` - Mark notification as read
+- [x] PATCH `/notifications/read` - Mark all notifications as read
+- [x] GET `/notifications/unread` - Get unread notifications count
 
 ## Search
 
-- [ ] GET `/search` - Search across projects
-- [ ] GET `/search/{projectId}` - Search within project
+- [x] GET `/search` - Search across projects
+- [x] GET `/search/{projectId}` - Search within project
 
 ## Activity
 
-- [ ] GET `/timeline/{projectId}` - Get project timeline
-- [ ] GET `/timeline/{projectId}/profile` - Get profile timeline
-- [ ] GET `/timeline/{projectId}/user/{userId}` - Get user timeline
+- [x] GET `/timeline/{projectId}` - Get project timeline
+- [x] GET `/timeline/{projectId}/profile` - Get profile timeline
+- [x] GET `/timeline/{projectId}/user/{userId}` - Get user timeline
 
 ## Custom Attributes
 
@@ -214,36 +214,36 @@ This document tracks Taiga API endpoints that are not yet implemented in the CLI
 
 ## Severities & Priorities
 
-- [ ] GET `/severities` - List severities
-- [ ] GET `/priorities` - List priorities
-- [ ] GET `/issue-statuses` - List issue statuses
-- [ ] GET `/issue-types` - List issue types
-- [ ] GET `/task-statuses` - List task statuses
-- [ ] GET `/userstory-statuses` - List user story statuses
+- [x] GET `/severities` - List severities
+- [x] GET `/priorities` - List priorities
+- [x] GET `/issue-statuses` - List issue statuses
+- [x] GET `/issue-types` - List issue types
+- [x] GET `/task-statuses` - List task statuses
+- [x] GET `/userstory-statuses` - List user story statuses
 
 ## Comments
 
-- [ ] GET `/userstories/{id}/comments` - Get user story comments
-- [ ] POST `/userstories/{id}/comments` - Create comment
-- [ ] GET `/tasks/{id}/comments` - Get task comments
-- [ ] POST `/tasks/{id}/comments` - Create comment
-- [ ] GET `/issues/{id}/comments` - Get issue comments
-- [ ] POST `/issues/{id}/comments` - Create comment
-- [ ] GET `/epics/{id}/comments` - Get epic comments
-- [ ] POST `/epics/{id}/comments` - Create comment
-- [ ] GET `/wiki/{id}/comments` - Get wiki page comments
-- [ ] POST `/wiki/{id}/comments` - Create comment
+- [x] GET `/userstories/{id}/comments` - Get user story comments
+- [x] POST `/userstories/{id}/comments` - Create comment
+- [x] GET `/tasks/{id}/comments` - Get task comments
+- [x] POST `/tasks/{id}/comments` - Create comment
+- [x] GET `/issues/{id}/comments` - Get issue comments
+- [x] POST `/issues/{id}/comments` - Create comment
+- [x] GET `/epics/{id}/comments` - Get epic comments
+- [x] POST `/epics/{id}/comments` - Create comment
+- [x] GET `/wiki/{id}/comments` - Get wiki page comments
+- [x] POST `/wiki/{id}/comments` - Create comment
 
 ## Attachments
 
-- [ ] GET `/attachments/{id}` - Get attachment by ID
-- [ ] PATCH `/attachments/{id}` - Update attachment
-- [ ] DELETE `/attachments/{id}` - Delete attachment
+- [x] GET `/attachments/{id}` - Get attachment by ID
+- [x] PATCH `/attachments/{id}` - Update attachment
+- [x] DELETE `/attachments/{id}` - Delete attachment
 
 ## History
 
-- [ ] GET `/history/{id}` - Get history entry by ID
-- [ ] GET `/history/{id}/comment` - Get history comment
+- [x] GET `/history/{id}` - Get history entry by ID
+- [x] GET `/history/{id}/comment` - Get history comment
 
 ## Applications
 
@@ -255,12 +255,12 @@ This document tracks Taiga API endpoints that are not yet implemented in the CLI
 
 ## References
 
-- [ ] GET `/references/{projectId}/{ref}` - Get item by reference
+- [x] GET `/references/{projectId}/{ref}` - Get item by reference
 
 ## Statistics
 
-- [ ] GET `/stats/discover` - Discover statistics
-- [ ] GET `/stats/{projectId}` - Get project statistics
+- [x] GET `/stats/discover` - Discover statistics
+- [x] GET `/stats/{projectId}` - Get project statistics
 
 ## Notes
 

@@ -22,6 +22,8 @@ public class AuthCommands(AuthService authService, TaigaApiFactory taigaApiFacto
                 Username = username,
                 Password = password
             });
+            if (string.IsNullOrWhiteSpace(response.AuthToken))
+                throw new InvalidOperationException("Received empty authentication token.");
             authService.SaveToken(response.AuthToken);
             Console.WriteLine("Login successful!");
         }

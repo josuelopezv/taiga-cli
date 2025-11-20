@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using TaigaCli.Api;
 using TaigaCli.Handlers;
 using TaigaCli.Services;
 
@@ -13,9 +12,9 @@ public static class ServiceConfiguration
         services.AddSingleton<AuthService>();
         services.AddTransient<AuthHeaderHandler>();
         services.AddSingleton<TaigaApiFactory>();
-        
+
         // API client - creates new instance each time to get latest base URL
-        services.AddScoped<ITaigaApi>(sp => sp.GetRequiredService<TaigaApiFactory>().Create());
+        services.AddScoped(sp => sp.GetRequiredService<TaigaApiFactory>().Create());
     }
 }
 

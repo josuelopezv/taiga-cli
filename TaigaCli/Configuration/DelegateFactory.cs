@@ -17,52 +17,46 @@ public static class DelegateFactory
         };
     }
 
-    private static Delegate? CreateTaskDelegate(MethodInfo method, object instance, ParameterInfo[] parameters)
+    private static Delegate? CreateTaskDelegate(MethodInfo method, object instance, ParameterInfo[] parameters) => parameters.Length switch
     {
-        return parameters.Length switch
-        {
-            0 => method.CreateDelegate(typeof(Func<Task>), instance),
-            1 => method.CreateDelegate(
-                typeof(Func<,>).MakeGenericType(parameters[0].ParameterType, typeof(Task)),
-                instance),
-            2 => method.CreateDelegate(
-                typeof(Func<,,>).MakeGenericType(
-                    parameters[0].ParameterType,
-                    parameters[1].ParameterType,
-                    typeof(Task)),
-                instance),
-            3 => method.CreateDelegate(
-                typeof(Func<,,,>).MakeGenericType(
-                    parameters[0].ParameterType,
-                    parameters[1].ParameterType,
-                    parameters[2].ParameterType,
-                    typeof(Task)),
-                instance),
-            _ => null
-        };
-    }
+        0 => method.CreateDelegate<Func<Task>>(instance),
+        1 => method.CreateDelegate(
+            typeof(Func<,>).MakeGenericType(parameters[0].ParameterType, typeof(Task)),
+            instance),
+        2 => method.CreateDelegate(
+            typeof(Func<,,>).MakeGenericType(
+                parameters[0].ParameterType,
+                parameters[1].ParameterType,
+                typeof(Task)),
+            instance),
+        3 => method.CreateDelegate(
+            typeof(Func<,,,>).MakeGenericType(
+                parameters[0].ParameterType,
+                parameters[1].ParameterType,
+                parameters[2].ParameterType,
+                typeof(Task)),
+            instance),
+        _ => null
+    };
 
-    private static Delegate? CreateActionDelegate(MethodInfo method, object instance, ParameterInfo[] parameters)
+    private static Delegate? CreateActionDelegate(MethodInfo method, object instance, ParameterInfo[] parameters) => parameters.Length switch
     {
-        return parameters.Length switch
-        {
-            0 => method.CreateDelegate(typeof(Action), instance),
-            1 => method.CreateDelegate(
-                typeof(Action<>).MakeGenericType(parameters[0].ParameterType),
-                instance),
-            2 => method.CreateDelegate(
-                typeof(Action<,>).MakeGenericType(
-                    parameters[0].ParameterType,
-                    parameters[1].ParameterType),
-                instance),
-            3 => method.CreateDelegate(
-                typeof(Action<,,>).MakeGenericType(
-                    parameters[0].ParameterType,
-                    parameters[1].ParameterType,
-                    parameters[2].ParameterType),
-                instance),
-            _ => null
-        };
-    }
+        0 => method.CreateDelegate<Action>(instance),
+        1 => method.CreateDelegate(
+            typeof(Action<>).MakeGenericType(parameters[0].ParameterType),
+            instance),
+        2 => method.CreateDelegate(
+            typeof(Action<,>).MakeGenericType(
+                parameters[0].ParameterType,
+                parameters[1].ParameterType),
+            instance),
+        3 => method.CreateDelegate(
+            typeof(Action<,,>).MakeGenericType(
+                parameters[0].ParameterType,
+                parameters[1].ParameterType,
+                parameters[2].ParameterType),
+            instance),
+        _ => null
+    };
 }
 

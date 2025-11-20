@@ -2,7 +2,6 @@ using Cocona;
 using Cocona.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using TaigaCli.Configuration;
 
 namespace TaigaCli.Configuration;
 
@@ -18,8 +17,9 @@ public static class CommandRegistrar
             var commandInstance = serviceProvider.GetRequiredService(commandType);
             var commandMethods = GetCommandMethods(commandType);
 
-            if (commandMethods.Count == 0)
-                continue;
+            if (!commandMethods.Any())
+                throw new InvalidOperationException($"No command methods found in {commandType.Name}.");
+            //continue;
 
             app.AddSubCommand(subCommandName, subCommandBuilder =>
             {
@@ -37,13 +37,9 @@ public static class CommandRegistrar
         }
     }
 
-    private static List<MethodInfo> GetCommandMethods(Type commandType)
-    {
-        return commandType
+    private static IEnumerable<MethodInfo> GetCommandMethods(Type commandType) => commandType
             .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-            .Where(m => m.GetCustomAttribute<CommandAttribute>() != null)
-            .ToList();
-    }
+            .Where(m => m.GetCustomAttribute<CommandAttribute>() != null);
 
     private static string GetCommandName(MethodInfo method)
     {

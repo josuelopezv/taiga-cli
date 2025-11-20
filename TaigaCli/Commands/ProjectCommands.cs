@@ -1,5 +1,6 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Models;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
@@ -39,5 +40,87 @@ public class ProjectCommands(ITaigaApi api, AuthService authService) : BaseComma
             Environment.Exit(1);
         }
     }
-}
 
+    [Command("get", Description = "Get project by ID")]
+    public async Task GetAsync([Argument(Description = "Project ID")] int id)
+    {
+        EnsureAuthenticated();
+        try
+        {
+            var project = await api.GetProjectAsync(id);
+            Console.WriteLine($"Project Details:");
+            Console.WriteLine($"  ID: {project.Id}");
+            Console.WriteLine($"  Name: {project.Name}");
+            Console.WriteLine($"  Slug: {project.Slug}");
+            if (!string.IsNullOrWhiteSpace(project.Description))
+            {
+                Console.WriteLine($"  Description: {project.Description}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching project: {ex.Message}");
+            Environment.Exit(1);
+        }
+    }
+
+    [Command("stats", Description = "Get project statistics")]
+    public async Task StatsAsync([Argument(Description = "Project ID")] int id)
+    {
+        EnsureAuthenticated();
+        try
+        {
+            var stats = await api.GetProjectStatsAsync(id);
+            Console.WriteLine($"Project Statistics (ID: {id}):");
+            foreach (var stat in stats)
+            {
+                Console.WriteLine($"  {stat.Key}: {stat.Value}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching project statistics: {ex.Message}");
+            Environment.Exit(1);
+        }
+    }
+
+    [Command("memberships", Description = "List project memberships")]
+    public async Task MembershipsAsync([Argument(Description = "Project ID")] int id)
+    {
+        EnsureAuthenticated();
+        try
+        {
+            var memberships = await api.GetProjectMembershipsAsync(id);
+            Console.WriteLine($"Project Memberships (Project ID: {id}):");
+            foreach (var membership in memberships)
+            {
+                Console.WriteLine($"  ID: {membership.Id}, User: {membership.User}, Role: {membership.Role}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching memberships: {ex.Message}");
+            Environment.Exit(1);
+        }
+    }
+
+    [Command("roles", Description = "List project roles")]
+    public async Task RolesAsync([Argument(Description = "Project ID")] int id)
+    {
+        EnsureAuthenticated();
+        try
+        {
+            var roles = await api.GetProjectRolesAsync(id);
+            Console.WriteLine($"Project Roles (Project ID: {id}):");
+            foreach (var role in roles)
+            {
+                Console.WriteLine($"  ID: {role.Id}, Name: {role.Name}, Slug: {role.Slug}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching roles: {ex.Message}");
+            Environment.Exit(1);
+        }
+    }
+}
