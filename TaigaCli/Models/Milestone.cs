@@ -1,31 +1,31 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class Milestone
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
     
-    [JsonProperty("slug")]
+    [JsonPropertyName("slug")]
     public string Slug { get; set; } = string.Empty;
     
-    [JsonProperty("description")]
+    [JsonPropertyName("description")]
     public string? Description { get; set; }
     
-    [JsonProperty("project")]
+    [JsonPropertyName("project")]
     public int Project { get; set; }
     
-    [JsonProperty("estimated_start")]
+    [JsonPropertyName("estimated_start")]
     public DateTime? EstimatedStart { get; set; }
     
-    [JsonProperty("estimated_finish")]
+    [JsonPropertyName("estimated_finish")]
     public DateTime? EstimatedFinish { get; set; }
     
-    [JsonProperty("closed")]
+    [JsonPropertyName("closed")]
     public bool Closed { get; set; }
 }
 

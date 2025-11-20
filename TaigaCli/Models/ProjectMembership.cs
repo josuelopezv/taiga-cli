@@ -1,22 +1,22 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class ProjectMembership
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("user")]
+    [JsonPropertyName("user")]
     public int User { get; set; }
     
-    [JsonProperty("project")]
+    [JsonPropertyName("project")]
     public int Project { get; set; }
     
-    [JsonProperty("role")]
+    [JsonPropertyName("role")]
     public int Role { get; set; }
     
-    [JsonProperty("is_admin")]
+    [JsonPropertyName("is_admin")]
     public bool IsAdmin { get; set; }
 }
 

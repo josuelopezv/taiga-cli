@@ -1,4 +1,5 @@
-using Newtonsoft.Json;
+
+using System.Text.Json;
 using TaigaCli.Models;
 
 namespace TaigaCli.Services;
@@ -20,15 +21,10 @@ public class AuthService
     private void LoadConfig()
     {
         if (File.Exists(_configFilePath))
-            try
-            {
-                var json = File.ReadAllText(_configFilePath);
-                _config = JsonConvert.DeserializeObject<Config>(json) ?? new Config();
-            }
-            catch
-            {
-                _config = new Config();
-            }
+        {
+            var json = File.ReadAllText(_configFilePath);
+            _config = JsonSerializer.Deserialize<Config>(json) ?? new Config();
+        }
         else
             _config = new Config();
     }
@@ -37,9 +33,7 @@ public class AuthService
     {
         if (!Directory.Exists(_configDirectory))
             Directory.CreateDirectory(_configDirectory);
-
-        var json = JsonConvert.SerializeObject(_config, Formatting.Indented);
-        File.WriteAllText(_configFilePath, json);
+        File.WriteAllText(_configFilePath, JsonSerializer.Serialize(_config));
         if (showMessage)
             Console.WriteLine($"Config saved to {_configFilePath}");
     }

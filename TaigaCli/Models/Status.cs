@@ -1,28 +1,28 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class Status
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
     
-    [JsonProperty("slug")]
+    [JsonPropertyName("slug")]
     public string Slug { get; set; } = string.Empty;
     
-    [JsonProperty("color")]
+    [JsonPropertyName("color")]
     public string? Color { get; set; }
     
-    [JsonProperty("is_closed")]
+    [JsonPropertyName("is_closed")]
     public bool IsClosed { get; set; }
     
-    [JsonProperty("project")]
+    [JsonPropertyName("project")]
     public int Project { get; set; }
     
-    [JsonProperty("order")]
+    [JsonPropertyName("order")]
     public int Order { get; set; }
 }
 

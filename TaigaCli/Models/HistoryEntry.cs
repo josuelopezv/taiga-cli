@@ -1,25 +1,25 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class HistoryEntry
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("user")]
+    [JsonPropertyName("user")]
     public int? User { get; set; }
     
-    [JsonProperty("created_at")]
+    [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; }
     
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public int Type { get; set; }
     
-    [JsonProperty("comment")]
+    [JsonPropertyName("comment")]
     public string? Comment { get; set; }
     
-    [JsonProperty("diff")]
+    [JsonPropertyName("diff")]
     public Dictionary<string, object>? Diff { get; set; }
 }
 

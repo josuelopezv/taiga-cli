@@ -1,25 +1,23 @@
 using Refit;
 using TaigaCli.Api;
-using TaigaCli.Handlers;
 
 namespace TaigaCli.Services;
 
-public class TaigaApiFactory(AuthService authService)
+public class TaigaApiFactory(AuthService authService, IHttpClientFactory httpClientFactory)
 {
+    public const string AuthHttpClientName = "TaigaAuthClient";
+
     public ITaigaApi Create() => Create(authService.GetApiBaseUrl());
 
-    public ITaigaApi Create(string url)
+    public ITaigaApi Create(string url) => Create(url, includeAuth: true);
+
+    public ITaigaApi Create(string url, bool includeAuth)
     {
-        // Create a new handler instance for each API client
-        var handler = new AuthHeaderHandler(authService)
-        {
-            InnerHandler = new HttpClientHandler()
-        };
-        
-        return RestService.For<ITaigaApi>(new HttpClient(handler)
-        {
-            BaseAddress = new Uri(url)
-        });
+        var httpClient = includeAuth
+            ? httpClientFactory.CreateClient(AuthHttpClientName)
+            : httpClientFactory.CreateClient();
+        httpClient.BaseAddress = new Uri(url);
+        return RestService.For<ITaigaApi>(httpClient);
     }
 }
 

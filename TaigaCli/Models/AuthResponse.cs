@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class AuthResponse
 {
-    [JsonProperty("auth_token")]
+    [JsonPropertyName("auth_token")]
     public string AuthToken { get; set; } = string.Empty;
 }
 

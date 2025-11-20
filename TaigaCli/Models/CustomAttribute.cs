@@ -1,25 +1,25 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class CustomAttribute
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
     
-    [JsonProperty("description")]
+    [JsonPropertyName("description")]
     public string? Description { get; set; }
     
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; } = string.Empty;
     
-    [JsonProperty("project")]
+    [JsonPropertyName("project")]
     public int Project { get; set; }
     
-    [JsonProperty("order")]
+    [JsonPropertyName("order")]
     public int Order { get; set; }
 }
 

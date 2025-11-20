@@ -1,21 +1,11 @@
-﻿using Cocona;
-using Microsoft.Extensions.DependencyInjection;
+﻿global using System.Text.Json.Serialization;
+using Cocona;
 using TaigaCli.Configuration;
 
 var builder = CoconaApp.CreateBuilder();
-
 // Configure services
-ServiceConfiguration.ConfigureServices(builder.Services);
-
-// Register command classes in DI
-foreach (var commandType in CommandDiscovery.DiscoverCommandTypes())
-{
-    builder.Services.AddTransient(commandType);
-}
-
+ServiceConfiguration.ConfigureServices(builder);
 var app = builder.Build();
-
 // Register commands
 CommandRegistrar.RegisterCommands(app, app.Services);
-
 app.Run();

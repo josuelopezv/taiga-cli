@@ -1,19 +1,19 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class Project
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
     
-    [JsonProperty("slug")]
+    [JsonPropertyName("slug")]
     public string Slug { get; set; } = string.Empty;
     
-    [JsonProperty("description")]
+    [JsonPropertyName("description")]
     public string? Description { get; set; }
 }
 

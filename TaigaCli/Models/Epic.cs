@@ -1,25 +1,25 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class Epic
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("subject")]
+    [JsonPropertyName("subject")]
     public string Subject { get; set; } = string.Empty;
     
-    [JsonProperty("description")]
+    [JsonPropertyName("description")]
     public string? Description { get; set; }
     
-    [JsonProperty("project")]
+    [JsonPropertyName("project")]
     public int Project { get; set; }
     
-    [JsonProperty("status")]
+    [JsonPropertyName("status")]
     public int Status { get; set; }
     
-    [JsonProperty("color")]
+    [JsonPropertyName("color")]
     public string? Color { get; set; }
 }
 

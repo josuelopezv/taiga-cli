@@ -1,16 +1,16 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class AuthRequest
 {
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; } = "normal";
     
-    [JsonProperty("username")]
+    [JsonPropertyName("username")]
     public string Username { get; set; } = string.Empty;
     
-    [JsonProperty("password")]
+    [JsonPropertyName("password")]
     public string Password { get; set; } = string.Empty;
 }
 

@@ -1,19 +1,19 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class WikiPage
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("slug")]
+    [JsonPropertyName("slug")]
     public string Slug { get; set; } = string.Empty;
     
-    [JsonProperty("content")]
+    [JsonPropertyName("content")]
     public string? Content { get; set; }
     
-    [JsonProperty("project")]
+    [JsonPropertyName("project")]
     public int Project { get; set; }
 }
 

@@ -1,19 +1,17 @@
-using Newtonsoft.Json;
-
 namespace TaigaCli.Models;
 
 public class Notification
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
-    
-    [JsonProperty("read")]
+
+    [JsonPropertyName("read")]
     public bool Read { get; set; }
-    
-    [JsonProperty("created")]
+
+    [JsonPropertyName("created")]
     public DateTime Created { get; set; }
-    
-    [JsonProperty("data")]
+
+    [JsonPropertyName("data")]
     public Dictionary<string, object>? Data { get; set; }
 }
 

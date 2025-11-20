@@ -1,25 +1,25 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class Webhook
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
     
-    [JsonProperty("url")]
+    [JsonPropertyName("url")]
     public string Url { get; set; } = string.Empty;
     
-    [JsonProperty("key")]
+    [JsonPropertyName("key")]
     public string? Key { get; set; }
     
-    [JsonProperty("project")]
+    [JsonPropertyName("project")]
     public int Project { get; set; }
     
-    [JsonProperty("active")]
+    [JsonPropertyName("active")]
     public bool Active { get; set; }
 }
 

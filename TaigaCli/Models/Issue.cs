@@ -1,34 +1,34 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class Issue
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("subject")]
+    [JsonPropertyName("subject")]
     public string Subject { get; set; } = string.Empty;
     
-    [JsonProperty("description")]
+    [JsonPropertyName("description")]
     public string? Description { get; set; }
     
-    [JsonProperty("project")]
+    [JsonPropertyName("project")]
     public int Project { get; set; }
     
-    [JsonProperty("status")]
+    [JsonPropertyName("status")]
     public int Status { get; set; }
     
-    [JsonProperty("severity")]
+    [JsonPropertyName("severity")]
     public int? Severity { get; set; }
     
-    [JsonProperty("priority")]
+    [JsonPropertyName("priority")]
     public int? Priority { get; set; }
     
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public int? Type { get; set; }
     
-    [JsonProperty("assigned_to")]
+    [JsonPropertyName("assigned_to")]
     public int? AssignedTo { get; set; }
 }
 

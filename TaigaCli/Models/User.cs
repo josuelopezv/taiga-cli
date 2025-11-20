@@ -1,19 +1,19 @@
-using Newtonsoft.Json;
+
 
 namespace TaigaCli.Models;
 
 public class User
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("username")]
+    [JsonPropertyName("username")]
     public string Username { get; set; } = string.Empty;
     
-    [JsonProperty("email")]
+    [JsonPropertyName("email")]
     public string Email { get; set; } = string.Empty;
     
-    [JsonProperty("full_name")]
+    [JsonPropertyName("full_name")]
     public string FullName { get; set; } = string.Empty;
 }
 

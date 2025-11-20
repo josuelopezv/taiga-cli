@@ -1,25 +1,24 @@
-using Newtonsoft.Json;
 
 namespace TaigaCli.Models;
 
 public class Attachment
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
-    
-    [JsonProperty("name")]
+
+    [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-    
-    [JsonProperty("size")]
+
+    [JsonPropertyName("size")]
     public long Size { get; set; }
-    
-    [JsonProperty("url")]
+
+    [JsonPropertyName("url")]
     public string Url { get; set; } = string.Empty;
-    
-    [JsonProperty("description")]
+
+    [JsonPropertyName("description")]
     public string? Description { get; set; }
-    
-    [JsonProperty("attached_file")]
+
+    [JsonPropertyName("attached_file")]
     public string? AttachedFile { get; set; }
 }
 
