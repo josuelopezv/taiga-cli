@@ -45,4 +45,23 @@ public record TaigaTask(
     [property: JsonPropertyName("user_story_extra_info")] UserStoryExtraInfo UserStoryExtraInfo,
     [property: JsonPropertyName("version")] int Version,
     [property: JsonPropertyName("watchers")] IReadOnlyList<int> Watchers
-);
+)
+{
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"  ID: {Id}");
+        sb.AppendLine($"  Subject: {Subject}");
+        sb.AppendLine($"  Project: {Project}");
+        sb.AppendLine($"  Status: {Status}");
+        if (UserStoryExtraInfo != default)
+        {
+            sb.AppendLine($"  User Story: #{UserStoryExtraInfo.Ref} {UserStoryExtraInfo.Subject}");
+        }
+        if (!string.IsNullOrWhiteSpace(Description))
+        {
+            sb.AppendLine($"  Description: {Description}");
+        }
+        return sb.ToString().TrimEnd();
+    }
+}

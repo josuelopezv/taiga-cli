@@ -1,21 +1,20 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class Comment
+public record Comment(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("comment")] string CommentText,
+    [property: JsonPropertyName("user")] int User,
+    [property: JsonPropertyName("created_date")] DateTime CreatedDate,
+    [property: JsonPropertyName("modified_date")] DateTime? ModifiedDate
+)
 {
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("comment")]
-    public string CommentText { get; set; } = string.Empty;
-
-    [JsonPropertyName("user")]
-    public int User { get; set; }
-
-    [JsonPropertyName("created_date")]
-    public DateTime CreatedDate { get; set; }
-
-    [JsonPropertyName("modified_date")]
-    public DateTime? ModifiedDate { get; set; }
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"  Comment {Id}: {CreatedDate}");
+        sb.Append($"    {CommentText}");
+        return sb.ToString();
+    }
 }
 

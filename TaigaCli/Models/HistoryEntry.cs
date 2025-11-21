@@ -1,24 +1,25 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class HistoryEntry
+public record HistoryEntry(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("user")] int? User,
+    [property: JsonPropertyName("created_at")] DateTime CreatedAt,
+    [property: JsonPropertyName("type")] int Type,
+    [property: JsonPropertyName("comment")] string? Comment,
+    [property: JsonPropertyName("diff")] Dictionary<string, object>? Diff
+)
 {
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("user")]
-    public int? User { get; set; }
-
-    [JsonPropertyName("created_at")]
-    public DateTime CreatedAt { get; set; }
-
-    [JsonPropertyName("type")]
-    public int Type { get; set; }
-
-    [JsonPropertyName("comment")]
-    public string? Comment { get; set; }
-
-    [JsonPropertyName("diff")]
-    public Dictionary<string, object>? Diff { get; set; }
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.Append($"  Entry {Id}: {CreatedAt} - Type: {Type}");
+        if (!string.IsNullOrWhiteSpace(Comment))
+        {
+            sb.AppendLine();
+            sb.Append($"    Comment: {Comment}");
+        }
+        return sb.ToString();
+    }
 }
 

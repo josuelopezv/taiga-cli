@@ -1,18 +1,10 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class Notification
-{
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("read")]
-    public bool Read { get; set; }
-
-    [JsonPropertyName("created")]
-    public DateTime Created { get; set; }
-
-    [JsonPropertyName("data")]
-    public Dictionary<string, object>? Data { get; set; }
-}
+public record Notification(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("read")] bool Read,
+    [property: JsonPropertyName("created")] DateTime Created,
+    [property: JsonPropertyName("data")] Dictionary<string, object>? Data
+);
 

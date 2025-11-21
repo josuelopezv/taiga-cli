@@ -59,4 +59,18 @@ public record Project(
         [property: JsonPropertyName("totals_updated_datetime")] DateTime TotalsUpdatedDatetime,
         [property: JsonPropertyName("videoconferences")] object Videoconferences,
         [property: JsonPropertyName("videoconferences_extra_data")] object VideoconferencesExtraData
-    );
+    )
+{
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"  ID: {Id}");
+        sb.AppendLine($"  Name: {Name}");
+        sb.AppendLine($"  Slug: {Slug}");
+        if (!string.IsNullOrWhiteSpace(Description))
+        {
+            sb.AppendLine($"  Description: {Description}");
+        }
+        return sb.ToString().TrimEnd();
+    }
+}

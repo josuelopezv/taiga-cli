@@ -1,18 +1,24 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class WikiPage
+public record WikiPage(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("slug")] string Slug,
+    [property: JsonPropertyName("content")] string? Content,
+    [property: JsonPropertyName("project")] int Project
+)
 {
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("slug")]
-    public string Slug { get; set; } = string.Empty;
-
-    [JsonPropertyName("content")]
-    public string? Content { get; set; }
-
-    [JsonPropertyName("project")]
-    public int Project { get; set; }
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"  ID: {Id}");
+        sb.AppendLine($"  Slug: {Slug}");
+        sb.AppendLine($"  Project: {Project}");
+        if (!string.IsNullOrWhiteSpace(Content))
+        {
+            sb.AppendLine($"  Content: {Content}");
+        }
+        return sb.ToString().TrimEnd();
+    }
 }
 

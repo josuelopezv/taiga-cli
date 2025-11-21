@@ -23,13 +23,7 @@ public class ProjectCommands(ITaigaApi api, AuthService authService) : BaseComma
             Console.WriteLine($"Found {projects.Count} project(s):\n");
             foreach (var project in projects)
             {
-                Console.WriteLine($"  ID: {project.Id}");
-                Console.WriteLine($"  Name: {project.Name}");
-                Console.WriteLine($"  Slug: {project.Slug}");
-                if (!string.IsNullOrWhiteSpace(project.Description))
-                {
-                    Console.WriteLine($"  Description: {project.Description}");
-                }
+                Console.WriteLine(project.ToString());
                 Console.WriteLine();
             }
         }
@@ -48,13 +42,7 @@ public class ProjectCommands(ITaigaApi api, AuthService authService) : BaseComma
         {
             var project = await api.GetProjectAsync(id);
             Console.WriteLine($"Project Details:");
-            Console.WriteLine($"  ID: {project.Id}");
-            Console.WriteLine($"  Name: {project.Name}");
-            Console.WriteLine($"  Slug: {project.Slug}");
-            if (!string.IsNullOrWhiteSpace(project.Description))
-            {
-                Console.WriteLine($"  Description: {project.Description}");
-            }
+            Console.WriteLine(project.ToString());
         }
         catch (Exception ex)
         {
@@ -93,7 +81,7 @@ public class ProjectCommands(ITaigaApi api, AuthService authService) : BaseComma
             Console.WriteLine($"Project Memberships (Project ID: {id}):");
             foreach (var membership in memberships)
             {
-                Console.WriteLine($"  ID: {membership.Id}, User: {membership.User}, Role: {membership.Role}");
+                Console.WriteLine(membership.ToString());
             }
         }
         catch (Exception ex)
@@ -113,7 +101,7 @@ public class ProjectCommands(ITaigaApi api, AuthService authService) : BaseComma
             Console.WriteLine($"Project Roles (Project ID: {id}):");
             foreach (var role in roles)
             {
-                Console.WriteLine($"  ID: {role.Id}, Name: {role.Name}, Slug: {role.Slug}");
+                Console.WriteLine(role.ToString());
             }
         }
         catch (Exception ex)

@@ -1,24 +1,25 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class Attachment
+public record Attachment(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("name")] string Name,
+    [property: JsonPropertyName("size")] long Size,
+    [property: JsonPropertyName("url")] string Url,
+    [property: JsonPropertyName("description")] string? Description,
+    [property: JsonPropertyName("attached_file")] string? AttachedFile
+)
 {
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("size")]
-    public long Size { get; set; }
-
-    [JsonPropertyName("url")]
-    public string Url { get; set; } = string.Empty;
-
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-
-    [JsonPropertyName("attached_file")]
-    public string? AttachedFile { get; set; }
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.Append($"  ID: {Id}, Name: {Name}, Size: {Size} bytes");
+        if (!string.IsNullOrWhiteSpace(Url))
+        {
+            sb.AppendLine();
+            sb.Append($"    URL: {Url}");
+        }
+        return sb.ToString();
+    }
 }
 

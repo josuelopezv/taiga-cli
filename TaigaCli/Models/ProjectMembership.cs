@@ -1,21 +1,17 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class ProjectMembership
+public record ProjectMembership(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("user")] int User,
+    [property: JsonPropertyName("project")] int Project,
+    [property: JsonPropertyName("role")] int Role,
+    [property: JsonPropertyName("is_admin")] bool IsAdmin
+)
 {
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("user")]
-    public int User { get; set; }
-
-    [JsonPropertyName("project")]
-    public int Project { get; set; }
-
-    [JsonPropertyName("role")]
-    public int Role { get; set; }
-
-    [JsonPropertyName("is_admin")]
-    public bool IsAdmin { get; set; }
+    public override string ToString()
+    {
+        return $"  ID: {Id}, User: {User}, Role: {Role}";
+    }
 }
 

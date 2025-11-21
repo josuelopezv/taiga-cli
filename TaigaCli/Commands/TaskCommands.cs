@@ -25,18 +25,7 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Found {tasks.Count} task(s):\n");
             foreach (var task in tasks)
             {
-                Console.WriteLine($"  ID: {task.Id}");
-                Console.WriteLine($"  Subject: {task.Subject}");
-                Console.WriteLine($"  Project: {task.Project}");
-                Console.WriteLine($"  Status: {task.Status}");
-                if (task.UserStoryExtraInfo != default)
-                {
-                    Console.WriteLine($"  User Story: #{task.UserStoryExtraInfo.Ref} {task.UserStoryExtraInfo.Subject}");
-                }
-                if (!string.IsNullOrWhiteSpace(task.Description))
-                {
-                    Console.WriteLine($"  Description: {task.Description}");
-                }
+                Console.WriteLine(task.ToString());
                 Console.WriteLine();
             }
         }
@@ -55,18 +44,7 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
         {
             var task = await api.GetTaskAsync(id);
             Console.WriteLine($"Task Details:");
-            Console.WriteLine($"  ID: {task.Id}");
-            Console.WriteLine($"  Subject: {task.Subject}");
-            Console.WriteLine($"  Project: {task.Project}");
-            Console.WriteLine($"  Status: {task.Status}");
-            if (task.UserStoryExtraInfo != default)
-            {
-                Console.WriteLine($"  User Story: #{task.UserStoryExtraInfo.Ref} {task.UserStoryExtraInfo.Subject}");
-            }
-            if (!string.IsNullOrWhiteSpace(task.Description))
-            {
-                Console.WriteLine($"  Description: {task.Description}");
-            }
+            Console.WriteLine(task.ToString());
         }
         catch (Exception ex)
         {
@@ -85,7 +63,7 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Task History (ID: {id}):");
             foreach (var entry in history)
             {
-                Console.WriteLine($"  Entry {entry.Id}: {entry.CreatedAt} - Type: {entry.Type}");
+                Console.WriteLine(entry.ToString());
             }
         }
         catch (Exception ex)
@@ -105,8 +83,7 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Task Comments (ID: {id}):");
             foreach (var comment in comments)
             {
-                Console.WriteLine($"  Comment {comment.Id}: {comment.CreatedDate}");
-                Console.WriteLine($"    {comment.CommentText}");
+                Console.WriteLine(comment.ToString());
                 Console.WriteLine();
             }
         }
@@ -127,7 +104,7 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Task Attachments (ID: {id}):");
             foreach (var attachment in attachments)
             {
-                Console.WriteLine($"  ID: {attachment.Id}, Name: {attachment.Name}, Size: {attachment.Size} bytes");
+                Console.WriteLine(attachment.ToString());
             }
         }
         catch (Exception ex)

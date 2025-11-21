@@ -1,15 +1,9 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class AuthRequest
-{
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = "normal";
-
-    [JsonPropertyName("username")]
-    public string Username { get; set; } = string.Empty;
-
-    [JsonPropertyName("password")]
-    public string Password { get; set; } = string.Empty;
-}
+public record AuthRequest(
+    [property: JsonPropertyName("type")] string Type = "normal",
+    [property: JsonPropertyName("username")] string Username = "",
+    [property: JsonPropertyName("password")] string Password = ""
+);
 

@@ -23,22 +23,7 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
             Console.WriteLine($"Found {issues.Count} issue(s):\n");
             foreach (var issue in issues)
             {
-                Console.WriteLine($"  ID: {issue.Id}");
-                Console.WriteLine($"  Subject: {issue.Subject}");
-                Console.WriteLine($"  Project: {issue.Project}");
-                Console.WriteLine($"  Status: {issue.Status}");
-                if (issue.Severity != default)
-                {
-                    Console.WriteLine($"  Severity: {issue.Severity}");
-                }
-                if (issue.Priority != default)
-                {
-                    Console.WriteLine($"  Priority: {issue.Priority}");
-                }
-                if (!string.IsNullOrWhiteSpace(issue.Description))
-                {
-                    Console.WriteLine($"  Description: {issue.Description}");
-                }
+                Console.WriteLine(issue.ToString());
                 Console.WriteLine();
             }
         }
@@ -57,22 +42,7 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
         {
             var issue = await api.GetIssueAsync(id);
             Console.WriteLine($"Issue Details:");
-            Console.WriteLine($"  ID: {issue.Id}");
-            Console.WriteLine($"  Subject: {issue.Subject}");
-            Console.WriteLine($"  Project: {issue.Project}");
-            Console.WriteLine($"  Status: {issue.Status}");
-            if (issue.Severity != default)
-            {
-                Console.WriteLine($"  Severity: {issue.Severity}");
-            }
-            if (issue.Priority != default)
-            {
-                Console.WriteLine($"  Priority: {issue.Priority}");
-            }
-            if (!string.IsNullOrWhiteSpace(issue.Description))
-            {
-                Console.WriteLine($"  Description: {issue.Description}");
-            }
+            Console.WriteLine(issue.ToString());
         }
         catch (Exception ex)
         {
@@ -91,7 +61,7 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
             Console.WriteLine($"Issue History (ID: {id}):");
             foreach (var entry in history)
             {
-                Console.WriteLine($"  Entry {entry.Id}: {entry.CreatedAt} - Type: {entry.Type}");
+                Console.WriteLine(entry.ToString());
             }
         }
         catch (Exception ex)
@@ -111,8 +81,7 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
             Console.WriteLine($"Issue Comments (ID: {id}):");
             foreach (var comment in comments)
             {
-                Console.WriteLine($"  Comment {comment.Id}: {comment.CreatedDate}");
-                Console.WriteLine($"    {comment.CommentText}");
+                Console.WriteLine(comment.ToString());
                 Console.WriteLine();
             }
         }
@@ -133,7 +102,7 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
             Console.WriteLine($"Issue Attachments (ID: {id}):");
             foreach (var attachment in attachments)
             {
-                Console.WriteLine($"  ID: {attachment.Id}, Name: {attachment.Name}, Size: {attachment.Size} bytes");
+                Console.WriteLine(attachment.ToString());
             }
         }
         catch (Exception ex)

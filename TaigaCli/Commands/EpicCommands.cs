@@ -23,18 +23,7 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Found {epics.Count} epic(s):\n");
             foreach (var epic in epics)
             {
-                Console.WriteLine($"  ID: {epic.Id}");
-                Console.WriteLine($"  Subject: {epic.Subject}");
-                Console.WriteLine($"  Project: {epic.Project}");
-                Console.WriteLine($"  Status: {epic.Status}");
-                if (!string.IsNullOrWhiteSpace(epic.Color))
-                {
-                    Console.WriteLine($"  Color: {epic.Color}");
-                }
-                if (!string.IsNullOrWhiteSpace(epic.Description))
-                {
-                    Console.WriteLine($"  Description: {epic.Description}");
-                }
+                Console.WriteLine(epic.ToString());
                 Console.WriteLine();
             }
         }
@@ -53,18 +42,7 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
         {
             var epic = await api.GetEpicAsync(id);
             Console.WriteLine($"Epic Details:");
-            Console.WriteLine($"  ID: {epic.Id}");
-            Console.WriteLine($"  Subject: {epic.Subject}");
-            Console.WriteLine($"  Project: {epic.Project}");
-            Console.WriteLine($"  Status: {epic.Status}");
-            if (!string.IsNullOrWhiteSpace(epic.Color))
-            {
-                Console.WriteLine($"  Color: {epic.Color}");
-            }
-            if (!string.IsNullOrWhiteSpace(epic.Description))
-            {
-                Console.WriteLine($"  Description: {epic.Description}");
-            }
+            Console.WriteLine(epic.ToString());
         }
         catch (Exception ex)
         {
@@ -83,7 +61,7 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Epic History (ID: {id}):");
             foreach (var entry in history)
             {
-                Console.WriteLine($"  Entry {entry.Id}: {entry.CreatedAt} - Type: {entry.Type}");
+                Console.WriteLine(entry.ToString());
             }
         }
         catch (Exception ex)
@@ -103,7 +81,7 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Related User Stories (Epic ID: {id}):");
             foreach (var story in stories)
             {
-                Console.WriteLine($"  ID: {story.Id}, Subject: {story.Subject}");
+                Console.WriteLine(story.ToString());
             }
         }
         catch (Exception ex)
@@ -123,8 +101,7 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Epic Comments (ID: {id}):");
             foreach (var comment in comments)
             {
-                Console.WriteLine($"  Comment {comment.Id}: {comment.CreatedDate}");
-                Console.WriteLine($"    {comment.CommentText}");
+                Console.WriteLine(comment.ToString());
                 Console.WriteLine();
             }
         }
@@ -145,7 +122,7 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Epic Attachments (ID: {id}):");
             foreach (var attachment in attachments)
             {
-                Console.WriteLine($"  ID: {attachment.Id}, Name: {attachment.Name}, Size: {attachment.Size} bytes");
+                Console.WriteLine(attachment.ToString());
             }
         }
         catch (Exception ex)

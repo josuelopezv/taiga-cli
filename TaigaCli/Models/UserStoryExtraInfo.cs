@@ -6,4 +6,10 @@ public record UserStoryExtraInfo(
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("ref")] int Ref,
     [property: JsonPropertyName("subject")] string Subject
-);
+)
+{
+    public override string ToString()
+    {
+        return $"  ID: {Id}, Subject: {Subject}";
+    }
+}

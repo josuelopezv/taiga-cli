@@ -41,5 +41,28 @@ public record Issue(
     [property: JsonPropertyName("type")] int Type,
     [property: JsonPropertyName("version")] int Version,
     [property: JsonPropertyName("watchers")] IReadOnlyList<object> Watchers
-);
+)
+{
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"  ID: {Id}");
+        sb.AppendLine($"  Subject: {Subject}");
+        sb.AppendLine($"  Project: {Project}");
+        sb.AppendLine($"  Status: {Status}");
+        if (Severity != default)
+        {
+            sb.AppendLine($"  Severity: {Severity}");
+        }
+        if (Priority != default)
+        {
+            sb.AppendLine($"  Priority: {Priority}");
+        }
+        if (!string.IsNullOrWhiteSpace(Description))
+        {
+            sb.AppendLine($"  Description: {Description}");
+        }
+        return sb.ToString().TrimEnd();
+    }
+}
 

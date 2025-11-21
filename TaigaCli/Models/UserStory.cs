@@ -59,4 +59,19 @@ public record UserStory(
         [property: JsonPropertyName("description")] string Description,
         [property: JsonPropertyName("description_html")] string DescriptionHtml,
         [property: JsonPropertyName("neighbors")] Neighbors Neighbors
-    );
+    )
+{
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"  ID: #{Ref}");
+        sb.AppendLine($"  Subject: {Subject}");
+        sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
+        sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");
+        if (!string.IsNullOrWhiteSpace(Description))
+        {
+            sb.AppendLine($"  Description: {Description}");
+        }
+        return sb.ToString().TrimEnd();
+    }
+}

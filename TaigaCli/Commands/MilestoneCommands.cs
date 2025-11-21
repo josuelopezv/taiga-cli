@@ -23,19 +23,7 @@ public class MilestoneCommands(ITaigaApi api, AuthService authService) : BaseCom
             Console.WriteLine($"Found {milestones.Count} milestone(s):\n");
             foreach (var milestone in milestones)
             {
-                Console.WriteLine($"  ID: {milestone.Id}");
-                Console.WriteLine($"  Name: {milestone.Name}");
-                Console.WriteLine($"  Slug: {milestone.Slug}");
-                Console.WriteLine($"  Project: {milestone.Project}");
-                Console.WriteLine($"  Closed: {milestone.Closed}");
-                if (milestone.EstimatedStart.HasValue)
-                {
-                    Console.WriteLine($"  Estimated Start: {milestone.EstimatedStart}");
-                }
-                if (milestone.EstimatedFinish.HasValue)
-                {
-                    Console.WriteLine($"  Estimated Finish: {milestone.EstimatedFinish}");
-                }
+                Console.WriteLine(milestone.ToString());
                 Console.WriteLine();
             }
         }
@@ -54,19 +42,7 @@ public class MilestoneCommands(ITaigaApi api, AuthService authService) : BaseCom
         {
             var milestone = await api.GetMilestoneAsync(id);
             Console.WriteLine($"Milestone Details:");
-            Console.WriteLine($"  ID: {milestone.Id}");
-            Console.WriteLine($"  Name: {milestone.Name}");
-            Console.WriteLine($"  Slug: {milestone.Slug}");
-            Console.WriteLine($"  Project: {milestone.Project}");
-            Console.WriteLine($"  Closed: {milestone.Closed}");
-            if (milestone.EstimatedStart.HasValue)
-            {
-                Console.WriteLine($"  Estimated Start: {milestone.EstimatedStart}");
-            }
-            if (milestone.EstimatedFinish.HasValue)
-            {
-                Console.WriteLine($"  Estimated Finish: {milestone.EstimatedFinish}");
-            }
+            Console.WriteLine(milestone.ToString());
         }
         catch (Exception ex)
         {
@@ -105,7 +81,7 @@ public class MilestoneCommands(ITaigaApi api, AuthService authService) : BaseCom
             Console.WriteLine($"Milestone User Stories (ID: {id}):");
             foreach (var story in stories)
             {
-                Console.WriteLine($"  ID: {story.Id}, Subject: {story.Subject}");
+                Console.WriteLine(story.ToString());
             }
         }
         catch (Exception ex)

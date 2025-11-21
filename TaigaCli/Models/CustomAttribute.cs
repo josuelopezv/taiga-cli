@@ -1,24 +1,12 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class CustomAttribute
-{
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-
-    [JsonPropertyName("type")]
-    public string Type { get; set; } = string.Empty;
-
-    [JsonPropertyName("project")]
-    public int Project { get; set; }
-
-    [JsonPropertyName("order")]
-    public int Order { get; set; }
-}
+public record CustomAttribute(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("name")] string Name,
+    [property: JsonPropertyName("description")] string? Description,
+    [property: JsonPropertyName("type")] string Type,
+    [property: JsonPropertyName("project")] int Project,
+    [property: JsonPropertyName("order")] int Order
+);
 

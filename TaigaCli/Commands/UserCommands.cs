@@ -14,10 +14,7 @@ public class UserCommands(ITaigaApi api, AuthService authService) : BaseCommand(
         {
             var user = await api.GetCurrentUserAsync();
             Console.WriteLine($"Current User:");
-            Console.WriteLine($"  ID: {user.Id}");
-            Console.WriteLine($"  Username: {user.Username}");
-            Console.WriteLine($"  Full Name: {user.FullName}");
-            Console.WriteLine($"  Email: {user.Email}");
+            Console.WriteLine(user.ToString());
         }
         catch (Exception ex)
         {
@@ -34,10 +31,7 @@ public class UserCommands(ITaigaApi api, AuthService authService) : BaseCommand(
         {
             var user = await api.GetUserAsync(id);
             Console.WriteLine($"User Details:");
-            Console.WriteLine($"  ID: {user.Id}");
-            Console.WriteLine($"  Username: {user.Username}");
-            Console.WriteLine($"  Full Name: {user.FullName}");
-            Console.WriteLine($"  Email: {user.Email}");
+            Console.WriteLine(user.ToString());
         }
         catch (Exception ex)
         {
@@ -63,10 +57,7 @@ public class UserCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Found {users.Count} user(s):\n");
             foreach (var user in users)
             {
-                Console.WriteLine($"  ID: {user.Id}");
-                Console.WriteLine($"  Username: {user.Username}");
-                Console.WriteLine($"  Full Name: {user.FullName}");
-                Console.WriteLine($"  Email: {user.Email}");
+                Console.WriteLine(user.ToString());
                 Console.WriteLine();
             }
         }

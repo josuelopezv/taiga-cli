@@ -1,30 +1,34 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class Milestone
+public record Milestone(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("name")] string Name,
+    [property: JsonPropertyName("slug")] string Slug,
+    [property: JsonPropertyName("description")] string? Description,
+    [property: JsonPropertyName("project")] int Project,
+    [property: JsonPropertyName("estimated_start")] DateTime? EstimatedStart,
+    [property: JsonPropertyName("estimated_finish")] DateTime? EstimatedFinish,
+    [property: JsonPropertyName("closed")] bool Closed
+)
 {
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("slug")]
-    public string Slug { get; set; } = string.Empty;
-
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-
-    [JsonPropertyName("project")]
-    public int Project { get; set; }
-
-    [JsonPropertyName("estimated_start")]
-    public DateTime? EstimatedStart { get; set; }
-
-    [JsonPropertyName("estimated_finish")]
-    public DateTime? EstimatedFinish { get; set; }
-
-    [JsonPropertyName("closed")]
-    public bool Closed { get; set; }
+    public override string ToString()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"  ID: {Id}");
+        sb.AppendLine($"  Name: {Name}");
+        sb.AppendLine($"  Slug: {Slug}");
+        sb.AppendLine($"  Project: {Project}");
+        sb.AppendLine($"  Closed: {Closed}");
+        if (EstimatedStart.HasValue)
+        {
+            sb.AppendLine($"  Estimated Start: {EstimatedStart}");
+        }
+        if (EstimatedFinish.HasValue)
+        {
+            sb.AppendLine($"  Estimated Finish: {EstimatedFinish}");
+        }
+        return sb.ToString().TrimEnd();
+    }
 }
 

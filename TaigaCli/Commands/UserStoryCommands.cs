@@ -26,14 +26,7 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<U
             Console.WriteLine($"Found {stories.Count} user story/stories:\n");
             foreach (var story in stories)
             {
-                Console.WriteLine($"  ID: #{story.Ref}");
-                Console.WriteLine($"  Subject: {story.Subject}");
-                Console.WriteLine($"  Project: {story.Project} - {story.ProjectExtraInfo?.Name}");
-                Console.WriteLine($"  Status: {story.Status} - {story.StatusExtraInfo?.Name}");
-                if (!string.IsNullOrWhiteSpace(story.Description))
-                {
-                    Console.WriteLine($"  Description: {story.Description}");
-                }
+                Console.WriteLine(story.ToString());
                 Console.WriteLine();
             }
         }
@@ -52,12 +45,7 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<U
         {
             var story = await api.GetUserStoryAsync(id, project);
             Console.WriteLine($"User Story Details:");
-            Console.WriteLine($"  ID: #{story.Ref}");
-            Console.WriteLine($"  Subject: {story.Subject}");
-            Console.WriteLine($"  Project: {story.Project} - {story.ProjectExtraInfo?.Name}");
-            Console.WriteLine($"  Status: {story.Status} - {story.StatusExtraInfo?.Name}");
-            if (!string.IsNullOrWhiteSpace(story.Description))
-                Console.WriteLine($"  Description: {story.Description}");
+            Console.WriteLine(story.ToString());
         }
         catch (Exception ex)
         {
@@ -77,11 +65,7 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<U
             Console.WriteLine($"User Story History (ID: {id}):");
             foreach (var entry in history)
             {
-                Console.WriteLine($"  Entry {entry.Id}: {entry.CreatedAt} - Type: {entry.Type}");
-                if (!string.IsNullOrWhiteSpace(entry.Comment))
-                {
-                    Console.WriteLine($"    Comment: {entry.Comment}");
-                }
+                Console.WriteLine(entry.ToString());
             }
         }
         catch (Exception ex)
@@ -101,8 +85,7 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<U
             Console.WriteLine($"User Story Comments (ID: {id}):");
             foreach (var comment in comments)
             {
-                Console.WriteLine($"  Comment {comment.Id}: {comment.CreatedDate}");
-                Console.WriteLine($"    {comment.CommentText}");
+                Console.WriteLine(comment.ToString());
                 Console.WriteLine();
             }
         }
@@ -123,8 +106,7 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<U
             Console.WriteLine($"User Story Attachments (ID: {id}):");
             foreach (var attachment in attachments)
             {
-                Console.WriteLine($"  ID: {attachment.Id}, Name: {attachment.Name}, Size: {attachment.Size} bytes");
-                Console.WriteLine($"    URL: {attachment.Url}");
+                Console.WriteLine(attachment.ToString());
             }
         }
         catch (Exception ex)

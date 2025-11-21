@@ -1,9 +1,7 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class AuthResponse
-{
-    [JsonPropertyName("auth_token")]
-    public string AuthToken { get; set; } = string.Empty;
-}
+public record AuthResponse(
+    [property: JsonPropertyName("auth_token")] string AuthToken
+);
 

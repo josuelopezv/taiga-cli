@@ -23,9 +23,7 @@ public class WikiCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Found {pages.Count} wiki page(s):\n");
             foreach (var page in pages)
             {
-                Console.WriteLine($"  ID: {page.Id}");
-                Console.WriteLine($"  Slug: {page.Slug}");
-                Console.WriteLine($"  Project: {page.Project}");
+                Console.WriteLine(page.ToString());
                 Console.WriteLine();
             }
         }
@@ -44,13 +42,7 @@ public class WikiCommands(ITaigaApi api, AuthService authService) : BaseCommand(
         {
             var page = await api.GetWikiPageAsync(id);
             Console.WriteLine($"Wiki Page Details:");
-            Console.WriteLine($"  ID: {page.Id}");
-            Console.WriteLine($"  Slug: {page.Slug}");
-            Console.WriteLine($"  Project: {page.Project}");
-            if (!string.IsNullOrWhiteSpace(page.Content))
-            {
-                Console.WriteLine($"  Content: {page.Content}");
-            }
+            Console.WriteLine(page.ToString());
         }
         catch (Exception ex)
         {
@@ -69,7 +61,7 @@ public class WikiCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Wiki Page History (ID: {id}):");
             foreach (var entry in history)
             {
-                Console.WriteLine($"  Entry {entry.Id}: {entry.CreatedAt} - Type: {entry.Type}");
+                Console.WriteLine(entry.ToString());
             }
         }
         catch (Exception ex)
@@ -89,8 +81,7 @@ public class WikiCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Wiki Page Comments (ID: {id}):");
             foreach (var comment in comments)
             {
-                Console.WriteLine($"  Comment {comment.Id}: {comment.CreatedDate}");
-                Console.WriteLine($"    {comment.CommentText}");
+                Console.WriteLine(comment.ToString());
                 Console.WriteLine();
             }
         }
@@ -111,7 +102,7 @@ public class WikiCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"Wiki Page Attachments (ID: {id}):");
             foreach (var attachment in attachments)
             {
-                Console.WriteLine($"  ID: {attachment.Id}, Name: {attachment.Name}, Size: {attachment.Size} bytes");
+                Console.WriteLine(attachment.ToString());
             }
         }
         catch (Exception ex)

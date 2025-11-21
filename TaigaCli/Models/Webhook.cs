@@ -1,24 +1,12 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class Webhook
-{
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("url")]
-    public string Url { get; set; } = string.Empty;
-
-    [JsonPropertyName("key")]
-    public string? Key { get; set; }
-
-    [JsonPropertyName("project")]
-    public int Project { get; set; }
-
-    [JsonPropertyName("active")]
-    public bool Active { get; set; }
-}
+public record Webhook(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("name")] string Name,
+    [property: JsonPropertyName("url")] string Url,
+    [property: JsonPropertyName("key")] string? Key,
+    [property: JsonPropertyName("project")] int Project,
+    [property: JsonPropertyName("active")] bool Active
+);
 

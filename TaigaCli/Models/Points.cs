@@ -1,18 +1,10 @@
 //#nullable disable
 namespace TaigaCli.Models;
 
-public class Points
-{
-    [JsonPropertyName("1")]
-    public int? _1 { get; set; }
-
-    [JsonPropertyName("2")]
-    public int? _2 { get; set; }
-
-    [JsonPropertyName("3")]
-    public int? _3 { get; set; }
-
-    [JsonPropertyName("4")]
-    public int? _4 { get; set; }
-}
+public record Points(
+    [property: JsonPropertyName("1")] int? _1,
+    [property: JsonPropertyName("2")] int? _2,
+    [property: JsonPropertyName("3")] int? _3,
+    [property: JsonPropertyName("4")] int? _4
+);
 
