@@ -29,8 +29,10 @@ public static class ServiceConfiguration
 
         // Configure logging
         builder.Logging.ClearProviders();
+        Console.WriteLine(builder.Environment.EnvironmentName);
         if (builder.Environment.IsDevelopment())
         {
+            Console.WriteLine("Configuring Debug logging");
             builder.Logging.AddConsole();
             builder.Logging.SetMinimumLevel(LogLevel.Trace);
         }

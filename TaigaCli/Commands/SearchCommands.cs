@@ -6,6 +6,7 @@ namespace TaigaCli.Commands;
 
 public class SearchCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
+    [PrimaryCommand]
     [Command("project", Description = "Search within a project")]
     public async Task SearchProjectAsync(
         [Argument(Description = "Project ID")] int project,

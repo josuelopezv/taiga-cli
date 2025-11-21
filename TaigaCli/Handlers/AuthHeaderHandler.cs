@@ -1,4 +1,3 @@
-#pragma warning disable CA1873 // Avoid potentially expensive logging
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 using TaigaCli.Services;
@@ -12,8 +11,12 @@ public class AuthHeaderHandler(AuthService authService, ILogger<AuthHeaderHandle
         CancellationToken cancellationToken)
     {
         var token = authService.GetToken();
+
         if (!string.IsNullOrWhiteSpace(token))
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        request.Headers.Add("x-disable-pagination", "1");
+
         var response = await base.SendAsync(request, cancellationToken);
 
         logger.LogInformation("Request: {Method} {Uri} - Response: {StatusCode} Body: {Body}",

@@ -143,7 +143,10 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
                 data["assigned_to"] = assignedTo.Value;
 
             if (userStory.HasValue)
-                data["user_story"] = userStory.Value;
+            {
+                var story = await api.GetUserStoryAsync(userStory.Value, project);
+                data["user_story"] = story.Id;
+            }
 
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
