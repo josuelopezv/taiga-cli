@@ -47,7 +47,8 @@ public record Epic(
         sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");
         if (!string.IsNullOrWhiteSpace(Description))
         {
-            sb.AppendLine($"  Description: {Description}");
+            sb.AppendLine("  Description:");
+            sb.AppendLine(Description);
         }
         return sb.ToString().TrimEnd();
     }

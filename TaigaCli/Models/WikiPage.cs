@@ -16,7 +16,8 @@ public record WikiPage(
         sb.AppendLine($"  Project: {Project}");
         if (!string.IsNullOrWhiteSpace(Content))
         {
-            sb.AppendLine($"  Content: {Content}");
+            sb.AppendLine("  Content:");
+            sb.AppendLine(Content);
         }
         return sb.ToString().TrimEnd();
     }
