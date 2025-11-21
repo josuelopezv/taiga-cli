@@ -19,7 +19,6 @@ public static class CommandRegistrar
 
             if (!commandMethods.Any())
                 throw new InvalidOperationException($"No command methods found in {commandType.Name}.");
-            //continue;
 
             app.AddSubCommand(subCommandName, subCommandBuilder =>
             {

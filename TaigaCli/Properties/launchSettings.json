@@ -2,7 +2,7 @@
   "profiles": {
     "TaigaCli": {
       "commandName": "Project",
-      "commandLineArgs": "userstory list"
+      "commandLineArgs": " -- userstory list"
     }
   }
 }

@@ -8,7 +8,7 @@
 		<!-- Global Tool Configuration -->
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>taiga</ToolCommandName>
-		<PackageId>TaigaCli</PackageId>
+		<PackageId>taiga-cli</PackageId>
 		<Version>1.0.0</Version>
 		<Authors>josuelopezv</Authors>
 		<Product>Taiga CLI</Product>
@@ -17,6 +17,7 @@
 		<RepositoryUrl>https://github.com/josuelopezv/taiga-cli</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<StartupObject>Program</StartupObject>
 	</PropertyGroup>
 	
 	<ItemGroup>

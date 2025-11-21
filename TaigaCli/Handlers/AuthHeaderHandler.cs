@@ -16,7 +16,7 @@ public class AuthHeaderHandler(AuthService authService, ILogger<AuthHeaderHandle
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await base.SendAsync(request, cancellationToken);
 
-        logger.LogDebug("Request: {Method} {Uri} - Response: {StatusCode} Body: {Body}",
+        logger.LogInformation("Request: {Method} {Uri} - Response: {StatusCode} Body: {Body}",
             request.Method,
             request.RequestUri,
             response.StatusCode,

@@ -1,3 +1,4 @@
+#nullable disable
 namespace TaigaCli.Models;
 
 public class Notification

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Refit;
 using TaigaCli.Models;
 
@@ -100,8 +99,8 @@ public interface ITaigaApi
     [Get("/userstories")]
     Task<List<UserStory>> GetUserStoriesAsync([Query] int? project = null);
 
-    [Get("/userstories/{id}")]
-    Task<UserStory> GetUserStoryAsync(int id);
+    [Get("/userstories/by_ref")]
+    Task<UserStory> GetUserStoryAsync([Query] int @ref, [Query] int? project = null);
 
     [Post("/userstories")]
     Task<UserStory> CreateUserStoryAsync([Body] object userStoryData);

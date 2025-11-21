@@ -1,10 +1,11 @@
 using Cocona;
+using Microsoft.Extensions.Logging;
 using TaigaCli.Api;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
-public class UserStoryCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
+public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<UserStoryCommands> logger) : BaseCommand(authService)
 {
     [Command("list", Description = "List user stories (optionally filtered by project ID)")]
     public async Task ListAsync([Option('p', Description = "Project ID to filter by")] int? project = null)
@@ -44,25 +45,24 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService) : BaseCom
     }
 
     [Command("get", Description = "Get user story by ID")]
-    public async Task GetAsync([Argument(Description = "User Story ID")] int id)
+    public async Task GetAsync([Argument(Description = "User Story ID")] int id, [Option('p', Description = "Project ID to filter by")] int? project = null)
     {
         EnsureAuthenticated();
         try
         {
-            var story = await api.GetUserStoryAsync(id);
+            var story = await api.GetUserStoryAsync(id, project);
             Console.WriteLine($"User Story Details:");
-            Console.WriteLine($"  ID: {story.Id}");
+            Console.WriteLine($"  ID: #{story.Ref} [{story.Id}]");
             Console.WriteLine($"  Subject: {story.Subject}");
-            Console.WriteLine($"  Project: {story.Project}");
-            Console.WriteLine($"  Status: {story.Status}");
+            Console.WriteLine($"  Project: {story.Project} - {story.ProjectExtraInfo?.Name}");
+            Console.WriteLine($"  Status: {story.Status} {story.StatusExtraInfo?.Name}");
             if (!string.IsNullOrWhiteSpace(story.Description))
-            {
                 Console.WriteLine($"  Description: {story.Description}");
-            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error fetching user story: {ex.Message}");
+            logger.LogError(ex, "Error fetching user story with ID {UserStoryId} and Project ID {ProjectId}", id, project);
             Environment.Exit(1);
         }
     }

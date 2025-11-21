@@ -1,5 +1,4 @@
 using System.Reflection;
-using TaigaCli.Commands;
 
 namespace TaigaCli.Configuration;
 

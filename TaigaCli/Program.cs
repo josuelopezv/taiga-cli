@@ -2,10 +2,16 @@
 using Cocona;
 using TaigaCli.Configuration;
 
-var builder = CoconaApp.CreateBuilder();
-// Configure services
-ServiceConfiguration.ConfigureServices(builder);
-var app = builder.Build();
-// Register commands
-CommandRegistrar.RegisterCommands(app, app.Services);
-app.Run();
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        var builder = CoconaApp.CreateBuilder(args);
+        // Configure services
+        ServiceConfiguration.ConfigureServices(builder);
+        var app = builder.Build();
+        // Register commands
+        CommandRegistrar.RegisterCommands(app, app.Services);
+        app.Run();
+    }
+}
