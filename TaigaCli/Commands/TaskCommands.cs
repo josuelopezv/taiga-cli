@@ -113,5 +113,104 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Environment.Exit(1);
         }
     }
+
+    [Command("create", Description = "Create a new task")]
+    public async Task CreateAsync(
+        [Option('p', Description = "Project ID")] int project,
+        [Option('s', Description = "Subject/title")] string subject,
+        [Option('d', Description = "Description")] string? description = null,
+        [Option("status", Description = "Status ID")] int? status = null,
+        [Option("assigned-to", Description = "Assigned user ID")] int? assignedTo = null,
+        [Option('u', Description = "User Story ID")] int? userStory = null,
+        [Option("milestone", Description = "Milestone ID")] int? milestone = null)
+    {
+        EnsureAuthenticated();
+        try
+        {
+            var data = new Dictionary<string, object>
+            {
+                ["project"] = project,
+                ["subject"] = subject
+            };
+
+            if (!string.IsNullOrWhiteSpace(description))
+                data["description"] = description;
+
+            if (status.HasValue)
+                data["status"] = status.Value;
+
+            if (assignedTo.HasValue)
+                data["assigned_to"] = assignedTo.Value;
+
+            if (userStory.HasValue)
+                data["user_story"] = userStory.Value;
+
+            if (milestone.HasValue)
+                data["milestone"] = milestone.Value;
+
+            var task = await api.CreateTaskAsync(data);
+            Console.WriteLine("Task created successfully:");
+            Console.WriteLine(task.ToString());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating task: {ex.Message}");
+            Environment.Exit(1);
+        }
+    }
+
+    [Command("edit", Description = "Edit a task by ID")]
+    public async Task EditAsync(
+        [Argument(Description = "Task ID (e.g., 123)")] int refid,
+        [Option('p', Description = "Project ID to filter by")] int? project = null,
+        [Option('s', Description = "Subject/title")] string? subject = null,
+        [Option('d', Description = "Description")] string? description = null,
+        [Option("status", Description = "Status ID")] int? status = null,
+        [Option("assigned-to", Description = "Assigned user ID")] int? assignedTo = null,
+        [Option('u', Description = "User Story ID")] int? userStory = null,
+        [Option("milestone", Description = "Milestone ID")] int? milestone = null)
+    {
+        EnsureAuthenticated();
+        try
+        {
+            // Get the task by ref to obtain its ID
+            var task = await api.GetTaskAsync(refid, project);
+
+            var data = new Dictionary<string, object>();
+
+            if (!string.IsNullOrWhiteSpace(subject))
+                data["subject"] = subject;
+
+            if (!string.IsNullOrWhiteSpace(description))
+                data["description"] = description;
+
+            if (status.HasValue)
+                data["status"] = status.Value;
+
+            if (assignedTo.HasValue)
+                data["assigned_to"] = assignedTo.Value;
+
+            if (userStory.HasValue)
+                data["user_story"] = userStory.Value;
+
+            if (milestone.HasValue)
+                data["milestone"] = milestone.Value;
+
+            if (data.Count == 0)
+            {
+                Console.WriteLine("No fields to update. Please specify at least one field to modify.");
+                return;
+            }
+
+            var updatedTask = await api.UpdateTaskAsync(task.Id, data);
+            Console.WriteLine("Task updated successfully:");
+            Console.WriteLine(updatedTask.ToString());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating task: {ex.Message}");
+            Environment.Exit(1);
+        }
+    }
 }
 

@@ -111,5 +111,112 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
             Environment.Exit(1);
         }
     }
+
+    [Command("create", Description = "Create a new issue")]
+    public async Task CreateAsync(
+        [Option('p', Description = "Project ID")] int project,
+        [Option('s', Description = "Subject/title")] string subject,
+        [Option('d', Description = "Description")] string? description = null,
+        [Option("status", Description = "Status ID")] int? status = null,
+        [Option("type", Description = "Issue type ID")] int? type = null,
+        [Option("priority", Description = "Priority ID")] int? priority = null,
+        [Option("severity", Description = "Severity ID")] int? severity = null,
+        [Option("assigned-to", Description = "Assigned user ID")] int? assignedTo = null)
+    {
+        EnsureAuthenticated();
+        try
+        {
+            var data = new Dictionary<string, object>
+            {
+                ["project"] = project,
+                ["subject"] = subject
+            };
+
+            if (!string.IsNullOrWhiteSpace(description))
+                data["description"] = description;
+
+            if (status.HasValue)
+                data["status"] = status.Value;
+
+            if (type.HasValue)
+                data["type"] = type.Value;
+
+            if (priority.HasValue)
+                data["priority"] = priority.Value;
+
+            if (severity.HasValue)
+                data["severity"] = severity.Value;
+
+            if (assignedTo.HasValue)
+                data["assigned_to"] = assignedTo.Value;
+
+            var issue = await api.CreateIssueAsync(data);
+            Console.WriteLine("Issue created successfully:");
+            Console.WriteLine(issue.ToString());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating issue: {ex.Message}");
+            Environment.Exit(1);
+        }
+    }
+
+    [Command("edit", Description = "Edit an issue by ID")]
+    public async Task EditAsync(
+        [Argument(Description = "Issue ID (e.g., 123)")] int refid,
+        [Option('p', Description = "Project ID to filter by")] int? project = null,
+        [Option('s', Description = "Subject/title")] string? subject = null,
+        [Option('d', Description = "Description")] string? description = null,
+        [Option("status", Description = "Status ID")] int? status = null,
+        [Option("type", Description = "Issue type ID")] int? type = null,
+        [Option("priority", Description = "Priority ID")] int? priority = null,
+        [Option("severity", Description = "Severity ID")] int? severity = null,
+        [Option("assigned-to", Description = "Assigned user ID")] int? assignedTo = null)
+    {
+        EnsureAuthenticated();
+        try
+        {
+            // Get the issue by ref to obtain its ID
+            var issue = await api.GetIssueAsync(refid, project);
+
+            var data = new Dictionary<string, object>();
+
+            if (!string.IsNullOrWhiteSpace(subject))
+                data["subject"] = subject;
+
+            if (!string.IsNullOrWhiteSpace(description))
+                data["description"] = description;
+
+            if (status.HasValue)
+                data["status"] = status.Value;
+
+            if (type.HasValue)
+                data["type"] = type.Value;
+
+            if (priority.HasValue)
+                data["priority"] = priority.Value;
+
+            if (severity.HasValue)
+                data["severity"] = severity.Value;
+
+            if (assignedTo.HasValue)
+                data["assigned_to"] = assignedTo.Value;
+
+            if (data.Count == 0)
+            {
+                Console.WriteLine("No fields to update. Please specify at least one field to modify.");
+                return;
+            }
+
+            var updatedIssue = await api.UpdateIssueAsync(issue.Id, data);
+            Console.WriteLine("Issue updated successfully:");
+            Console.WriteLine(updatedIssue.ToString());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating issue: {ex.Message}");
+            Environment.Exit(1);
+        }
+    }
 }
 

@@ -64,8 +64,7 @@ public record UserStory(
     public override string ToString()
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"  RefID: #{Ref}");
-        sb.AppendLine($"  ID: {Id}");
+        sb.AppendLine($"  ID: #{Ref}");
         sb.AppendLine($"  Subject: {Subject}");
         sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
         sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");
