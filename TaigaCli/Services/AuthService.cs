@@ -9,6 +9,10 @@ public class AuthService
     private readonly string _configDirectory;
     private readonly string _configFilePath;
     private Config? _config;
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true
+    };
 
     public AuthService()
     {
@@ -33,7 +37,7 @@ public class AuthService
     {
         if (!Directory.Exists(_configDirectory))
             Directory.CreateDirectory(_configDirectory);
-        File.WriteAllText(_configFilePath, JsonSerializer.Serialize(_config));
+        File.WriteAllText(_configFilePath, JsonSerializer.Serialize(_config, _jsonOptions));
         if (showMessage)
             Console.WriteLine($"Config saved to {_configFilePath}");
     }

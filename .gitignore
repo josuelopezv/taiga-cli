@@ -153,3 +153,4 @@ artifacts/
 .idea/
 *.sln.iml
 
+/TaigaCli/.env
