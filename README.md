@@ -22,6 +22,13 @@ A powerful command-line interface for Taiga project management, built with .NET 
 
 - .NET 10.0 SDK or later
 
+### Global install - Preferred method
+
+Use the command:
+```bash
+dotnet tool install --global taiga-cli
+```
+
 ### Run from DotNet DNX
 
 Use the command:

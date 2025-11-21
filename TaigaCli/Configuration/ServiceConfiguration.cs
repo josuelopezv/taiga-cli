@@ -28,9 +28,9 @@ public static class ServiceConfiguration
         }
 
         // Configure logging
+        builder.Logging.ClearProviders();
         if (builder.Environment.IsDevelopment())
         {
-            builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
             builder.Logging.SetMinimumLevel(LogLevel.Trace);
         }
