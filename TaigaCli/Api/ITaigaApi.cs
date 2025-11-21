@@ -163,8 +163,8 @@ public interface ITaigaApi
     [Get("/tasks")]
     Task<List<TaigaTask>> GetTasksAsync([Query] int? project = null, [Query] int? userStory = null);
 
-    [Get("/tasks/{id}")]
-    Task<TaigaTask> GetTaskAsync(int id);
+    [Get("/tasks/by_ref")]
+    Task<TaigaTask> GetTaskAsync([Query] int @ref, [Query] int? project = null);
 
     [Post("/tasks")]
     Task<TaigaTask> CreateTaskAsync([Body] object taskData);
@@ -221,8 +221,8 @@ public interface ITaigaApi
     [Get("/issues")]
     Task<List<Issue>> GetIssuesAsync([Query] int? project = null);
 
-    [Get("/issues/{id}")]
-    Task<Issue> GetIssueAsync(int id);
+    [Get("/issues/by_ref")]
+    Task<Issue> GetIssueAsync([Query] int @ref, [Query] int? project = null);
 
     [Post("/issues")]
     Task<Issue> CreateIssueAsync([Body] object issueData);
@@ -279,8 +279,8 @@ public interface ITaigaApi
     [Get("/epics")]
     Task<List<Epic>> GetEpicsAsync([Query] int? project = null);
 
-    [Get("/epics/{id}")]
-    Task<Epic> GetEpicAsync(int id);
+    [Get("/epics/by_ref")]
+    Task<Epic> GetEpicAsync([Query] int @ref, [Query] int? project = null);
 
     [Post("/epics")]
     Task<Epic> CreateEpicAsync([Body] object epicData);
