@@ -49,7 +49,7 @@ public record UserStory(
         [property: JsonPropertyName("comment")] string Comment,
         [property: JsonPropertyName("origin_issue")] object OriginIssue,
         [property: JsonPropertyName("origin_task")] object OriginTask,
-        [property: JsonPropertyName("epics")] IReadOnlyList<EpicExtra> Epics,
+        [property: JsonPropertyName("epics")] IReadOnlyList<EpicExtraInfo> Epics,
         [property: JsonPropertyName("epic_order")] object EpicOrder,
         [property: JsonPropertyName("tasks")] IReadOnlyList<object> Tasks,
         [property: JsonPropertyName("total_attachments")] int TotalAttachments,

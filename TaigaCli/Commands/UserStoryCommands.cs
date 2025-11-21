@@ -26,10 +26,10 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<U
             Console.WriteLine($"Found {stories.Count} user story/stories:\n");
             foreach (var story in stories)
             {
-                Console.WriteLine($"  ID: {story.Id}");
+                Console.WriteLine($"  ID: #{story.Ref}");
                 Console.WriteLine($"  Subject: {story.Subject}");
-                Console.WriteLine($"  Project: {story.Project}");
-                Console.WriteLine($"  Status: {story.Status}");
+                Console.WriteLine($"  Project: {story.Project} - {story.ProjectExtraInfo?.Name}");
+                Console.WriteLine($"  Status: {story.Status} - {story.StatusExtraInfo?.Name}");
                 if (!string.IsNullOrWhiteSpace(story.Description))
                 {
                     Console.WriteLine($"  Description: {story.Description}");
@@ -52,10 +52,10 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<U
         {
             var story = await api.GetUserStoryAsync(id, project);
             Console.WriteLine($"User Story Details:");
-            Console.WriteLine($"  ID: #{story.Ref} [{story.Id}]");
+            Console.WriteLine($"  ID: #{story.Ref}");
             Console.WriteLine($"  Subject: {story.Subject}");
             Console.WriteLine($"  Project: {story.Project} - {story.ProjectExtraInfo?.Name}");
-            Console.WriteLine($"  Status: {story.Status} {story.StatusExtraInfo?.Name}");
+            Console.WriteLine($"  Status: {story.Status} - {story.StatusExtraInfo?.Name}");
             if (!string.IsNullOrWhiteSpace(story.Description))
                 Console.WriteLine($"  Description: {story.Description}");
         }

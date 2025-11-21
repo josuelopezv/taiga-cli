@@ -29,9 +29,9 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
                 Console.WriteLine($"  Subject: {task.Subject}");
                 Console.WriteLine($"  Project: {task.Project}");
                 Console.WriteLine($"  Status: {task.Status}");
-                if (task.UserStory.HasValue)
+                if (task.UserStoryExtraInfo != default)
                 {
-                    Console.WriteLine($"  User Story: {task.UserStory}");
+                    Console.WriteLine($"  User Story: #{task.UserStoryExtraInfo.Ref} {task.UserStoryExtraInfo.Subject}");
                 }
                 if (!string.IsNullOrWhiteSpace(task.Description))
                 {
@@ -59,9 +59,9 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Console.WriteLine($"  Subject: {task.Subject}");
             Console.WriteLine($"  Project: {task.Project}");
             Console.WriteLine($"  Status: {task.Status}");
-            if (task.UserStory.HasValue)
+            if (task.UserStoryExtraInfo != default)
             {
-                Console.WriteLine($"  User Story: {task.UserStory}");
+                Console.WriteLine($"  User Story: #{task.UserStoryExtraInfo.Ref} {task.UserStoryExtraInfo.Subject}");
             }
             if (!string.IsNullOrWhiteSpace(task.Description))
             {

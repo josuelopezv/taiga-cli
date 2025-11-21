@@ -27,11 +27,11 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
                 Console.WriteLine($"  Subject: {issue.Subject}");
                 Console.WriteLine($"  Project: {issue.Project}");
                 Console.WriteLine($"  Status: {issue.Status}");
-                if (issue.Severity.HasValue)
+                if (issue.Severity != default)
                 {
                     Console.WriteLine($"  Severity: {issue.Severity}");
                 }
-                if (issue.Priority.HasValue)
+                if (issue.Priority != default)
                 {
                     Console.WriteLine($"  Priority: {issue.Priority}");
                 }
@@ -61,11 +61,11 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
             Console.WriteLine($"  Subject: {issue.Subject}");
             Console.WriteLine($"  Project: {issue.Project}");
             Console.WriteLine($"  Status: {issue.Status}");
-            if (issue.Severity.HasValue)
+            if (issue.Severity != default)
             {
                 Console.WriteLine($"  Severity: {issue.Severity}");
             }
-            if (issue.Priority.HasValue)
+            if (issue.Priority != default)
             {
                 Console.WriteLine($"  Priority: {issue.Priority}");
             }
