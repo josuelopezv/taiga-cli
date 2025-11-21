@@ -16,7 +16,7 @@ public class StatusCommands(ITaigaApi api, AuthService authService) : BaseComman
             Console.WriteLine($"Severities:");
             foreach (var severity in severities)
             {
-                Console.WriteLine($"  ID: {severity.Id}, Name: {severity.Name}, Color: {severity.Color}");
+                Console.WriteLine(severity.ToString());
             }
         }
         catch (Exception ex)
@@ -36,7 +36,7 @@ public class StatusCommands(ITaigaApi api, AuthService authService) : BaseComman
             Console.WriteLine($"Priorities:");
             foreach (var priority in priorities)
             {
-                Console.WriteLine($"  ID: {priority.Id}, Name: {priority.Name}, Color: {priority.Color}");
+                Console.WriteLine(priority.ToString());
             }
         }
         catch (Exception ex)
@@ -56,7 +56,7 @@ public class StatusCommands(ITaigaApi api, AuthService authService) : BaseComman
             Console.WriteLine($"Issue Statuses:");
             foreach (var status in statuses)
             {
-                Console.WriteLine($"  ID: {status.Id}, Name: {status.Name}, Slug: {status.Slug}, Closed: {status.IsClosed}");
+                Console.WriteLine(status.ToString());
             }
         }
         catch (Exception ex)
@@ -76,7 +76,7 @@ public class StatusCommands(ITaigaApi api, AuthService authService) : BaseComman
             Console.WriteLine($"Issue Types:");
             foreach (var type in types)
             {
-                Console.WriteLine($"  ID: {type.Id}, Name: {type.Name}, Color: {type.Color}");
+                Console.WriteLine(type.ToString());
             }
         }
         catch (Exception ex)
@@ -96,7 +96,7 @@ public class StatusCommands(ITaigaApi api, AuthService authService) : BaseComman
             Console.WriteLine($"Task Statuses:");
             foreach (var status in statuses)
             {
-                Console.WriteLine($"  ID: {status.Id}, Name: {status.Name}, Slug: {status.Slug}, Closed: {status.IsClosed}");
+                Console.WriteLine(status.ToString());
             }
         }
         catch (Exception ex)
@@ -116,7 +116,7 @@ public class StatusCommands(ITaigaApi api, AuthService authService) : BaseComman
             Console.WriteLine($"User Story Statuses:");
             foreach (var status in statuses)
             {
-                Console.WriteLine($"  ID: {status.Id}, Name: {status.Name}, Slug: {status.Slug}, Closed: {status.IsClosed}");
+                Console.WriteLine(status.ToString());
             }
         }
         catch (Exception ex)

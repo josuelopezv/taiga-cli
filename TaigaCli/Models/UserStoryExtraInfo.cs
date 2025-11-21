@@ -2,14 +2,11 @@
 namespace TaigaCli.Models;
 
 public record UserStoryExtraInfo(
-    [property: JsonPropertyName("epics")] IReadOnlyList<Epic> Epics,
-    [property: JsonPropertyName("id")] int Id,
-    [property: JsonPropertyName("ref")] int Ref,
-    [property: JsonPropertyName("subject")] string Subject
+       [property: JsonPropertyName("id")] int Id,
+       [property: JsonPropertyName("ref")] int Ref,
+       [property: JsonPropertyName("subject")] string Subject,
+       [property: JsonPropertyName("epics")] IReadOnlyList<EpicExtraInfo> Epics
 )
 {
-    public override string ToString()
-    {
-        return $"  ID: {Id}, Subject: {Subject}";
-    }
+    public override string ToString() => $"  ID: {Ref}, Subject: {Subject}";
 }

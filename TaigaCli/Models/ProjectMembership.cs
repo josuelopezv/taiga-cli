@@ -9,9 +9,6 @@ public record ProjectMembership(
     [property: JsonPropertyName("is_admin")] bool IsAdmin
 )
 {
-    public override string ToString()
-    {
-        return $"  ID: {Id}, User: {User}, Role: {Role}";
-    }
+    public override string ToString() => $"  ID: {Id}, User: {User}, Role: {Role}";
 }
 

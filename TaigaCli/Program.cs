@@ -7,11 +7,12 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = CoconaApp.CreateBuilder(args);
-        // Configure services
         ServiceConfiguration.ConfigureServices(builder);
         var app = builder.Build();
-        // Register commands
-        CommandRegistrar.RegisterCommands(app, app.Services);
+
+        // Register command types as subcommands with custom names
+        CommandTypeRegistrar.RegisterCommandTypes(app, app.Services);
+
         app.Run();
     }
 }

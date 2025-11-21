@@ -429,10 +429,7 @@ public interface ITaigaApi
 
     // Search
     [Get("/search")]
-    Task<Dictionary<string, object>> SearchAsync([Query] string text);
-
-    [Get("/search/{projectId}")]
-    Task<Dictionary<string, object>> SearchProjectAsync(int projectId, [Query] string text);
+    Task<Dictionary<string, object>> SearchProjectAsync([Query] int project, [Query] string text);
 
     // Timeline/Activity
     [Get("/timeline/{projectId}")]

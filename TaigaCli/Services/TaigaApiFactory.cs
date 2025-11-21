@@ -17,7 +17,14 @@ public class TaigaApiFactory(AuthService authService, IHttpClientFactory httpCli
             ? httpClientFactory.CreateClient(AuthHttpClientName)
             : httpClientFactory.CreateClient();
         httpClient.BaseAddress = new Uri(url);
-        return RestService.For<ITaigaApi>(httpClient);
+        return RestService.For<ITaigaApi>(httpClient, new RefitSettings()
+        {
+            ContentSerializer = new JsonContentSerializer(new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            }),
+        });
     }
 }
 

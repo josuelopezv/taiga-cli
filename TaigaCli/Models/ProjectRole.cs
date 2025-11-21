@@ -9,9 +9,6 @@ public record ProjectRole(
     [property: JsonPropertyName("computable")] bool Computable
 )
 {
-    public override string ToString()
-    {
-        return $"  ID: {Id}, Name: {Name}, Slug: {Slug}";
-    }
+    public override string ToString() => $"  ID: {Id}, Name: {Name}, Slug: {Slug}";
 }
 
