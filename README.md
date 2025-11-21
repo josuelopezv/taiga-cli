@@ -22,25 +22,12 @@ A powerful command-line interface for Taiga project management, built with .NET 
 
 - .NET 10.0 SDK or later
 
-### From Source
+### Run from DotNet DNX
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/josuelopezv/taiga-cli.git
-   cd taiga-cli
-   ```
-
-2. Build and run:
-   ```bash
-   dotnet build
-   dotnet run --project TaigaCli -- --help
-   ```
-
-3. (Optional) Install as a global tool:
-   ```bash
-   dotnet pack TaigaCli/TaigaCli.csproj --configuration Release
-   dotnet tool install -g --add-source ./TaigaCli/nupkg TaigaCli
-   ```
+Use the command:
+```bash
+dnx taiga-cli
+```
 
 ## Usage
 
