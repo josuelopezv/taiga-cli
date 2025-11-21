@@ -35,12 +35,12 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
     }
 
     [Command("get", Description = "Get epic by ID")]
-    public async Task GetAsync([Argument(Description = "Epic ID")] int id)
+    public async Task GetAsync([Argument(Description = "Epic ID")] int id, [Option('p', Description = "Project ID to filter by")] int? project = null)
     {
         EnsureAuthenticated();
         try
         {
-            var epic = await api.GetEpicAsync(id);
+            var epic = await api.GetEpicAsync(id, project);
             Console.WriteLine($"Epic Details:");
             Console.WriteLine(epic.ToString());
         }

@@ -50,7 +50,8 @@ public record TaigaTask(
     public override string ToString()
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"  ID: {Ref}");
+        sb.AppendLine($"  RefID: #{Ref}");
+        sb.AppendLine($"  ID: {Id}");
         sb.AppendLine($"  Subject: {Subject}");
         sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
         sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");

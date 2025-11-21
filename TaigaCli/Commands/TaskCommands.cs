@@ -37,12 +37,12 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
     }
 
     [Command("get", Description = "Get task by ID")]
-    public async Task GetAsync([Argument(Description = "Task ID")] int id)
+    public async Task GetAsync([Argument(Description = "Task ID")] int id, [Option('p', Description = "Project ID to filter by")] int? project = null)
     {
         EnsureAuthenticated();
         try
         {
-            var task = await api.GetTaskAsync(id);
+            var task = await api.GetTaskAsync(id, project);
             Console.WriteLine($"Task Details:");
             Console.WriteLine(task.ToString());
         }

@@ -41,14 +41,11 @@ public record Epic(
     public override string ToString()
     {
         var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"  RefID: #{Ref}");
         sb.AppendLine($"  ID: {Id}");
         sb.AppendLine($"  Subject: {Subject}");
         sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
         sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");
-        if (!string.IsNullOrWhiteSpace(Color))
-        {
-            sb.AppendLine($"  Color: {Color}");
-        }
         if (!string.IsNullOrWhiteSpace(Description))
         {
             sb.AppendLine($"  Description: {Description}");

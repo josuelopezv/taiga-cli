@@ -35,12 +35,12 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
     }
 
     [Command("get", Description = "Get issue by ID")]
-    public async Task GetAsync([Argument(Description = "Issue ID")] int id)
+    public async Task GetAsync([Argument(Description = "Issue ID")] int id, [Option('p', Description = "Project ID to filter by")] int? project = null)
     {
         EnsureAuthenticated();
         try
         {
-            var issue = await api.GetIssueAsync(id);
+            var issue = await api.GetIssueAsync(id, project);
             Console.WriteLine($"Issue Details:");
             Console.WriteLine(issue.ToString());
         }
