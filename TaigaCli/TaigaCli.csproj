@@ -9,7 +9,7 @@
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>taiga</ToolCommandName>
 		<PackageId>taiga-cli</PackageId>
-		<Version>1.0.0</Version>
+		<Version>1.0.2</Version>
 		<Authors>josuelopezv</Authors>
 		<Product>Taiga CLI</Product>
 		<Description>A command-line interface for Taiga project management</Description>

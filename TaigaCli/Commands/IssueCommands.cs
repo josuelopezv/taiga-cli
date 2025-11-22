@@ -92,25 +92,26 @@ public class IssueCommands(ITaigaApi api, AuthService authService) : BaseCommand
         }
     }
 
-    [Command("attachments", Description = "List issue attachments")]
-    public async Task AttachmentsAsync([Argument(Description = "Issue ID")] int id)
-    {
-        EnsureAuthenticated();
-        try
-        {
-            var attachments = await api.GetIssueAttachmentsAsync(id);
-            Console.WriteLine($"Issue Attachments (ID: {id}):");
-            foreach (var attachment in attachments)
-            {
-                Console.WriteLine(attachment.ToString());
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching attachments: {ex.Message}");
-            Environment.Exit(1);
-        }
-    }
+    // DISABLED: Returns 404 error - endpoint not available
+    // [Command("attachments", Description = "List issue attachments")]
+    // public async Task AttachmentsAsync([Argument(Description = "Issue ID")] int id)
+    // {
+    //     EnsureAuthenticated();
+    //     try
+    //     {
+    //         var attachments = await api.GetIssueAttachmentsAsync(id);
+    //         Console.WriteLine($"Issue Attachments (ID: {id}):");
+    //         foreach (var attachment in attachments)
+    //         {
+    //             Console.WriteLine(attachment.ToString());
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine($"Error fetching attachments: {ex.Message}");
+    //         Environment.Exit(1);
+    //     }
+    // }
 
     [Command("create", Description = "Create a new issue")]
     public async Task CreateAsync(

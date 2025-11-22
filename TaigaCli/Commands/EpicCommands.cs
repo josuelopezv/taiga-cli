@@ -112,25 +112,26 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
         }
     }
 
-    [Command("attachments", Description = "List epic attachments")]
-    public async Task AttachmentsAsync([Argument(Description = "Epic ID")] int id)
-    {
-        EnsureAuthenticated();
-        try
-        {
-            var attachments = await api.GetEpicAttachmentsAsync(id);
-            Console.WriteLine($"Epic Attachments (ID: {id}):");
-            foreach (var attachment in attachments)
-            {
-                Console.WriteLine(attachment.ToString());
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching attachments: {ex.Message}");
-            Environment.Exit(1);
-        }
-    }
+    // DISABLED: Returns 404 error - endpoint not available
+    // [Command("attachments", Description = "List epic attachments")]
+    // public async Task AttachmentsAsync([Argument(Description = "Epic ID")] int id)
+    // {
+    //     EnsureAuthenticated();
+    //     try
+    //     {
+    //         var attachments = await api.GetEpicAttachmentsAsync(id);
+    //         Console.WriteLine($"Epic Attachments (ID: {id}):");
+    //         foreach (var attachment in attachments)
+    //         {
+    //             Console.WriteLine(attachment.ToString());
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine($"Error fetching attachments: {ex.Message}");
+    //         Environment.Exit(1);
+    //     }
+    // }
 
     [Command("create", Description = "Create a new epic")]
     public async Task CreateAsync(

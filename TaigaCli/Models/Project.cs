@@ -37,7 +37,7 @@ public record Project(
     [property: JsonPropertyName("looking_for_people_note")] string LookingForPeopleNote,
     [property: JsonPropertyName("members")] IReadOnlyList<int> Members,
     [property: JsonPropertyName("modified_date")] DateTime ModifiedDate,
-    [property: JsonPropertyName("my_homepage")] bool MyHomepage,
+    //[property: JsonPropertyName("my_homepage")] bool? MyHomepage,
     [property: JsonPropertyName("my_permissions")] IReadOnlyList<string> MyPermissions,
     [property: JsonPropertyName("notify_level")] int NotifyLevel,
     [property: JsonPropertyName("owner")] OwnerExtraInfo Owner,

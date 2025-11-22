@@ -71,43 +71,45 @@ public class ProjectCommands(ITaigaApi api, AuthService authService) : BaseComma
         }
     }
 
-    [Command("memberships", Description = "List project memberships")]
-    public async Task MembershipsAsync([Argument(Description = "Project ID")] int id)
-    {
-        EnsureAuthenticated();
-        try
-        {
-            var memberships = await api.GetProjectMembershipsAsync(id);
-            Console.WriteLine($"Project Memberships (Project ID: {id}):");
-            foreach (var membership in memberships)
-            {
-                Console.WriteLine(membership.ToString());
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching memberships: {ex.Message}");
-            Environment.Exit(1);
-        }
-    }
+    // DISABLED: Returns 404 error - endpoint not available
+    // [Command("memberships", Description = "List project memberships")]
+    // public async Task MembershipsAsync([Argument(Description = "Project ID")] int id)
+    // {
+    //     EnsureAuthenticated();
+    //     try
+    //     {
+    //         var memberships = await api.GetProjectMembershipsAsync(id);
+    //         Console.WriteLine($"Project Memberships (Project ID: {id}):");
+    //         foreach (var membership in memberships)
+    //         {
+    //             Console.WriteLine(membership.ToString());
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine($"Error fetching memberships: {ex.Message}");
+    //         Environment.Exit(1);
+    //     }
+    // }
 
-    [Command("roles", Description = "List project roles")]
-    public async Task RolesAsync([Argument(Description = "Project ID")] int id)
-    {
-        EnsureAuthenticated();
-        try
-        {
-            var roles = await api.GetProjectRolesAsync(id);
-            Console.WriteLine($"Project Roles (Project ID: {id}):");
-            foreach (var role in roles)
-            {
-                Console.WriteLine(role.ToString());
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching roles: {ex.Message}");
-            Environment.Exit(1);
-        }
-    }
+    // DISABLED: Returns 404 error - endpoint not available
+    // [Command("roles", Description = "List project roles")]
+    // public async Task RolesAsync([Argument(Description = "Project ID")] int id)
+    // {
+    //     EnsureAuthenticated();
+    //     try
+    //     {
+    //         var roles = await api.GetProjectRolesAsync(id);
+    //         Console.WriteLine($"Project Roles (Project ID: {id}):");
+    //         foreach (var role in roles)
+    //         {
+    //             Console.WriteLine(role.ToString());
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine($"Error fetching roles: {ex.Message}");
+    //         Environment.Exit(1);
+    //     }
+    // }
 }
