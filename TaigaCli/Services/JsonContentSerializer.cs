@@ -15,18 +15,7 @@ public class JsonContentSerializer(JsonSerializerOptions jsonSerializerOptions) 
     public async Task<T?> FromHttpContentAsync<T>(
         HttpContent content,
         CancellationToken cancellationToken = default
-    )
-    {
-        try
-        {
-            return await content.ReadFromJsonAsync<T>(jsonSerializerOptions, cancellationToken);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error deserializing HTTP content: {e.Message} {await content.ReadAsStringAsync(cancellationToken)}");
-            throw new JsonException("Failed to deserialize HTTP content", e);
-        }
-    }
+    ) => await content.ReadFromJsonAsync<T>(jsonSerializerOptions, cancellationToken);
 
     public string? GetFieldNameForProperty(PropertyInfo propertyInfo) => propertyInfo switch
     {
@@ -46,10 +35,7 @@ public class JsonContentSerializer(JsonSerializerOptions jsonSerializerOptions) 
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
         jsonSerializerOptions.Converters.Add(new ObjectToInferredTypesConverter());
-        jsonSerializerOptions.Converters.Add(
-            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-        );
-
+        jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
         return jsonSerializerOptions;
     }
 }

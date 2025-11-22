@@ -16,15 +16,12 @@ public class SearchCommands(ITaigaApi api, AuthService authService) : BaseComman
         try
         {
             var results = await api.SearchProjectAsync(project, text);
-            Console.WriteLine($"Search Results in Project {project} for '{text}':");
-            foreach (var result in results)
-            {
-                Console.WriteLine($"  {result.Key}: {result.Value}");
-            }
+            Console.WriteLine($"{results.Count} Search Results in Project {project} for '{text}':");
+            Console.WriteLine(results);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error performing search: {ex.Message}");
+            Console.WriteLine($"Error performing search: {ex}");
             Environment.Exit(1);
         }
     }

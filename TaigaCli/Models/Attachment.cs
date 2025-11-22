@@ -2,10 +2,10 @@
 namespace TaigaCli.Models;
 
 public record Attachment(
-    [property: JsonPropertyName("id")] int Id,
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("size")] long Size,
-    [property: JsonPropertyName("url")] string Url,
+    [property: JsonPropertyName("id")] int? Id,
+    [property: JsonPropertyName("name")] string? Name,
+    [property: JsonPropertyName("size")] long? Size,
+    [property: JsonPropertyName("url")] string? Url,
     [property: JsonPropertyName("description")] string? Description,
     [property: JsonPropertyName("attached_file")] string? AttachedFile
 )

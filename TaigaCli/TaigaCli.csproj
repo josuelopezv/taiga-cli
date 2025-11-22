@@ -26,7 +26,11 @@
 	  <EmbeddedResource Remove="nupkg\**" />
 	  <None Remove="nupkg\**" />
 	</ItemGroup>
-
+	
+	<ItemGroup>
+	  <Compile Remove="Commands\NotificationCommands.cs" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="Cocona" Version="2.*" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.*" />

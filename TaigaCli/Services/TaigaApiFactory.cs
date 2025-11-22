@@ -1,11 +1,10 @@
-using Microsoft.Extensions.Logging;
 using Refit;
 using System.Text.Json;
 using TaigaCli.Api;
 
 namespace TaigaCli.Services;
 
-public class TaigaApiFactory(AuthService authService, IHttpClientFactory httpClientFactory, ILogger<TaigaApiFactory> logger)
+public class TaigaApiFactory(AuthService authService, IHttpClientFactory httpClientFactory)
 {
     public const string AuthHttpClientName = "TaigaAuthClient";
     private static readonly RefitSettings _settings = new()
@@ -15,6 +14,7 @@ public class TaigaApiFactory(AuthService authService, IHttpClientFactory httpCli
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         }),
+        DeserializationExceptionFactory = async (httpResponseMessage, ex) => throw ex
     };
 
     public ITaigaApi Create() => Create(authService.GetApiBaseUrl());
@@ -27,22 +27,7 @@ public class TaigaApiFactory(AuthService authService, IHttpClientFactory httpCli
             ? httpClientFactory.CreateClient(AuthHttpClientName)
             : httpClientFactory.CreateClient();
         httpClient.BaseAddress = new Uri(url);
-        return RestService.For<ITaigaApi>(httpClient, new RefitSettings()
-        {
-            ContentSerializer = new JsonContentSerializer(new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            }),
-            DeserializationExceptionFactory = async (httpResponseMessage, ex) =>
-            {
-                logger.LogError("Error deserializing response from {Url}: {StatusCode} - {ReasonPhrase}",
-                    httpResponseMessage.RequestMessage?.RequestUri,
-                    httpResponseMessage.StatusCode,
-                    httpResponseMessage.ReasonPhrase);
-                throw ex;
-            }
-        });
+        return RestService.For<ITaigaApi>(httpClient, _settings);
     }
 }
 

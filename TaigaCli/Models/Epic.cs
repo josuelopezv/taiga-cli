@@ -12,8 +12,8 @@ public record Epic(
     [property: JsonPropertyName("status")] int Status,
     [property: JsonPropertyName("status_extra_info")] StatusExtraInfo StatusExtraInfo,
     [property: JsonPropertyName("subject")] string Subject,
-    [property: JsonPropertyName("assigned_to")] int AssignedTo,
-    [property: JsonPropertyName("assigned_to_extra_info")] AssignedToExtraInfo AssignedToExtraInfo,
+    [property: JsonPropertyName("assigned_to")] int? AssignedTo,
+    [property: JsonPropertyName("assigned_to_extra_info")] AssignedToExtraInfo? AssignedToExtraInfo,
     [property: JsonPropertyName("attachments")] IReadOnlyList<object> Attachments,
     [property: JsonPropertyName("blocked_note")] string BlockedNote,
     [property: JsonPropertyName("blocked_note_html")] string BlockedNoteHtml,
@@ -30,12 +30,13 @@ public record Epic(
     [property: JsonPropertyName("modified_date")] DateTime ModifiedDate,
     [property: JsonPropertyName("neighbors")] Neighbors Neighbors,
     [property: JsonPropertyName("owner")] int Owner,
-    [property: JsonPropertyName("owner_extra_info")] OwnerExtraInfo OwnerExtraInfo,
-    [property: JsonPropertyName("tags")] IReadOnlyList<List<string>> Tags,
+    [property: JsonPropertyName("owner_extra_info")] OwnerExtraInfo? OwnerExtraInfo,
+    [property: JsonPropertyName("tags")] IReadOnlyList<List<string>>? Tags,
     [property: JsonPropertyName("team_requirement")] bool TeamRequirement,
     [property: JsonPropertyName("total_voters")] int TotalVoters,
     [property: JsonPropertyName("total_watchers")] int TotalWatchers,
-    [property: JsonPropertyName("user_stories_counts")] UserStoriesCounts UserStoriesCounts,
+    [property: JsonPropertyName("user_stories_counts")] UserStoriesCounts? UserStoriesCounts,
+    [property: JsonPropertyName("due_date")] DateTime? DueDate,
     [property: JsonPropertyName("version")] int Version,
     [property: JsonPropertyName("watchers")] IReadOnlyList<int> Watchers
 )
@@ -44,19 +45,21 @@ public record Epic(
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"  ID: #{Ref}");
-        sb.AppendLine($"  Owner: {OwnerExtraInfo.FullNameDisplay}");
-        if (AssignedToExtraInfo != null)
+        sb.AppendLine($"  Owner: {OwnerExtraInfo?.FullNameDisplay}");
+        if (AssignedToExtraInfo != default)
             sb.AppendLine($"  Assigned To: {AssignedToExtraInfo.FullNameDisplay}");
         sb.AppendLine($"  Subject: {Subject}");
         sb.AppendLine($"  Status: {StatusExtraInfo?.Name}");
-        if (Tags.Count != default)
+        if (DueDate != default)
+            sb.AppendLine($"  Due Date: {DueDate:yyyy-MM-dd}");
+        if (UserStoriesCounts != null && UserStoriesCounts.Total != 0)
+            sb.AppendLine($"  User Stories: {UserStoriesCounts.Total} Progress: {UserStoriesCounts.Progress}%");
+        if (Tags != null && Tags.Count != default)
             sb.AppendLine($"  Tags: {Tags.JoinTags(" - ")}");
+        sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
         if (!string.IsNullOrWhiteSpace(Description))
-        {
-            sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
             sb.AppendLine($"  Description: \n{Description}");
-        }
-        if (Attachments.Count != default)
+        if (Attachments != null && Attachments.Count != default)
             sb.AppendLine($"  Attachments: {Attachments.Select(a => a.ToString()).JoinToString(" - ")}");
         return sb.ToString().TrimEnd();
     }
