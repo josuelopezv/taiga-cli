@@ -22,7 +22,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="ModelContextProtocol" Version="0.*-*" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.*" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.*" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Taiga.Api\Taiga.Api.csproj" />

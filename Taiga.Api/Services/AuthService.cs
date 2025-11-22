@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Taiga.Api.Models;
 
-namespace Taiga.Cli.Services;
+namespace Taiga.Api.Services;
 
 public class AuthService
 {

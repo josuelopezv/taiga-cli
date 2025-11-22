@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Taiga.Cli.Services;
+namespace Taiga.Api.Services;
 
 public class JsonContentSerializer(JsonSerializerOptions jsonSerializerOptions) : IHttpContentSerializer
 {

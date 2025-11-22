@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Taiga.Api;
 
-namespace Taiga.Cli.Services;
+namespace Taiga.Api.Services;
 
 public class TaigaApiFactory(AuthService authService, IHttpClientFactory httpClientFactory)
 {

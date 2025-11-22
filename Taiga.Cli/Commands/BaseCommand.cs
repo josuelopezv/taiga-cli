@@ -1,4 +1,4 @@
-using Taiga.Cli.Services;
+using Taiga.Api.Services;
 
 namespace Taiga.Cli.Commands;
 

@@ -1,23 +1,22 @@
-using Cocona;
+using ModelContextProtocol.Server;
+using System.ComponentModel;
 using Taiga.Api.Models;
 using Taiga.Api.Services;
-using Taiga.Cli.Configuration;
 
-namespace Taiga.Cli.Commands;
+namespace Taiga.Mcp.Tools;
 
-[SubCommand("auth", Description = "Commands for authentication")]
-public class AuthCommands(AuthService authService, TaigaApiFactory taigaApiFactory)
+[McpServerToolType]
+public class AuthTool(AuthService authService, TaigaApiFactory taigaApiFactory)
 {
-    [Command("login", Description = "Authenticate with Taiga using username and password")]
-    public async Task LoginAsync(
-        [Option('u', Description = "Username")] string username,
-        [Option('p', Description = "Password")] string password,
-        [Option('a', Description = "API Base URL (e.g., https://api.taiga.io/api/v1 or https://your-taiga-instance.com/api/v1)")] string? apiUrl = null)
+    [McpServerTool, Description("Authenticate with Taiga using username and password")]
+    public async Task<string> LoginAsync(
+        [Description("Username")] string username,
+        [Description("Password")] string password,
+        [Description("API Base URL (e.g., https://api.taiga.io/api/v1 or https://your-taiga-instance.com/api/v1)")] string? apiUrl = null)
     {
         try
         {
             var baseUrl = GetOrSetApiBaseUrl(apiUrl);
-            Console.WriteLine("Using API URL: {0}", baseUrl);
             // Create API client with the correct base URL
             var api = taigaApiFactory.Create(baseUrl, false);
             var response = await api.AuthenticateAsync(new AuthRequest
@@ -28,20 +27,19 @@ public class AuthCommands(AuthService authService, TaigaApiFactory taigaApiFacto
             if (string.IsNullOrWhiteSpace(response.AuthToken))
                 throw new InvalidOperationException("Received empty authentication token.");
             authService.SaveToken(response.AuthToken);
-            Console.WriteLine("Login successful!");
+            return "Login successful!";
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Login failed: {ex.Message}");
-            Environment.Exit(1);
+            return $"Login failed: {ex.Message}";
         }
     }
 
-    [Command("logout", Description = "Clear stored authentication token")]
-    public void LogoutAsync()
+    [McpServerTool, Description("Clear stored authentication token")]
+    public string Logout()
     {
         authService.ClearToken();
-        Console.WriteLine("Logged out successfully.");
+        return "Logged out successfully.";
     }
 
     private string GetOrSetApiBaseUrl(string? apiUrl)
@@ -61,4 +59,3 @@ public class AuthCommands(AuthService authService, TaigaApiFactory taigaApiFacto
                 ? $"{baseUrl}/v1"
                 : $"{baseUrl}/api/v1";
 }
-

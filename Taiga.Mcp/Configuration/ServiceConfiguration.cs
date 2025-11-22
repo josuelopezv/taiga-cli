@@ -1,15 +1,14 @@
-using Cocona.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Taiga.Api.Handlers;
 using Taiga.Api.Services;
 
-namespace Taiga.Cli.Configuration;
+namespace Taiga.Mcp.Configuration;
 
 public static class ServiceConfiguration
 {
-    public static void ConfigureServices(CoconaAppBuilder builder)
+    public static void ConfigureServices(HostApplicationBuilder builder)
     {
         // Core services
         builder.Services
@@ -20,10 +19,6 @@ public static class ServiceConfiguration
             .AddScoped(sp => sp.GetRequiredService<TaigaApiFactory>().Create())
             .AddHttpClient(TaigaApiFactory.AuthHttpClientName)
             .AddHttpMessageHandler<AuthHeaderHandler>();
-
-        // Register command classes in DI
-        foreach (var commandType in CommandDiscovery.DiscoverCommandTypes())
-            builder.Services.AddTransient(commandType);
 
         // Configure logging
         builder.Logging.ClearProviders();

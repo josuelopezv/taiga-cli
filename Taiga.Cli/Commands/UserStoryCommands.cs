@@ -1,7 +1,7 @@
 using Cocona;
 using Taiga.Api;
+using Taiga.Api.Services;
 using Taiga.Cli.Configuration;
-using Taiga.Cli.Services;
 
 namespace Taiga.Cli.Commands;
 

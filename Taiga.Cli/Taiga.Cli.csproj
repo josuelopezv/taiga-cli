@@ -24,7 +24,6 @@
 		<PackageReference Include="Cocona" Version="2.*" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.*" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.*" />
-		<PackageReference Include="Refit.HttpClientFactory" Version="8.*" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Remove="nupkg\**" />
