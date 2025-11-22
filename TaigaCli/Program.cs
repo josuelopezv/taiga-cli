@@ -6,13 +6,10 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var builder = CoconaApp.CreateBuilder(args);
+        var builder = CoconaApp.CreateBuilder(args, o => o.EnableShellCompletionSupport = true);
         ServiceConfiguration.ConfigureServices(builder);
         var app = builder.Build();
-
-        // Register command types as subcommands with custom names
-        CommandTypeRegistrar.RegisterCommandTypes(app, app.Services);
-
+        app.RegisterCommandTypes();
         app.Run();
     }
 }

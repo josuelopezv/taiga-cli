@@ -1,9 +1,11 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Configuration;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("webhook", Description = "Commands for managing webhooks")]
 public class WebhookCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
     [Command("list", Description = "List webhooks (optionally filtered by project)")]

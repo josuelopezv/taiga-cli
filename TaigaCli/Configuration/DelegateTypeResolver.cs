@@ -13,7 +13,7 @@ public static class DelegateTypeResolver
     /// </summary>
     /// <param name="method">The method to get the delegate type for.</param>
     /// <returns>The delegate type, or null if the method signature is not supported.</returns>
-    public static Type? GetDelegateType(MethodInfo method)
+    public static Type? GetDelegateType(this MethodInfo method)
     {
         var parameters = method.GetParameters();
         var returnType = method.ReturnType;

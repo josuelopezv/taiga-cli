@@ -45,8 +45,8 @@ taiga user me
 - `taiga userstory history <story-id>` - Get user story history
 - `taiga userstory comments <story-id>` - Get user story comments
 - `taiga userstory attachments <story-id>` - List user story attachments
-- `taiga userstory create -p <project-id> -s <subject> [-d <description>] [--status <status-id>] [--assigned-to <user-id>] [--milestone <milestone-id>]` - Create a new user story
-- `taiga userstory edit <story-id> [-p <project-id>] [-s <subject>] [-d <description>] [--status <status-id>] [--assigned-to <user-id>] [--milestone <milestone-id>]` - Edit a user story
+- `taiga userstory create -p <project-id> -t <subject> [-d <description>] [-s <status-id>] [-a <user-id>] [-m <milestone-id>]` - Create a new user story
+- `taiga userstory edit <story-id> [-p <project-id>] [-t <subject>] [-d <description>] [-s <status-id>] [-a <user-id>] [-m <milestone-id>]` - Edit a user story
 
 ### Tasks
 - `taiga task list [-p <project-id>] [-u <user-story-id>]` - List tasks (optionally filtered by project or user story)
@@ -140,7 +140,7 @@ You can chain multiple commands to:
 1. Execute: taiga project list (to find project ID)
 2. Execute: taiga status userstory-statuses -p <project-id> (to find available statuses)
 3. Execute: taiga user list -p <project-id> (to find user IDs for assignment)
-4. Execute: taiga userstory create -p <project-id> -s "Story Title" -d "Description" --status <status-id>
+4. Execute: taiga userstory create -p <project-id> -t "Story Title" -d "Description" -s <status-id>
 5. Parse output to confirm creation
 ```
 

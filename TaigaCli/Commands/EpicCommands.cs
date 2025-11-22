@@ -1,9 +1,11 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Configuration;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("epic", Description = "Commands for managing epics")]
 public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
     [Command("list", Description = "List epics (optionally filtered by project)")]
@@ -112,34 +114,13 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
         }
     }
 
-    // DISABLED: Returns 404 error - endpoint not available
-    // [Command("attachments", Description = "List epic attachments")]
-    // public async Task AttachmentsAsync([Argument(Description = "Epic ID")] int id)
-    // {
-    //     EnsureAuthenticated();
-    //     try
-    //     {
-    //         var attachments = await api.GetEpicAttachmentsAsync(id);
-    //         Console.WriteLine($"Epic Attachments (ID: {id}):");
-    //         foreach (var attachment in attachments)
-    //         {
-    //             Console.WriteLine(attachment.ToString());
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine($"Error fetching attachments: {ex.Message}");
-    //         Environment.Exit(1);
-    //     }
-    // }
-
     [Command("create", Description = "Create a new epic")]
     public async Task CreateAsync(
         [Option('p', Description = "Project ID")] int project,
-        [Option('s', Description = "Subject/title")] string subject,
-        [Option('d', Description = "Description")] string? description = null,
-        [Option("status", Description = "Status ID")] int? status = null,
-        [Option("assigned-to", Description = "Assigned user ID")] int? assignedTo = null)
+        [Option('t', Description = "Subject/title")] string subject,
+        [Option('d', Description = "Description (support markdown)")] string? description = null,
+        [Option("status", shortNames: ['s'], Description = "Status ID")] int? status = null,
+        [Option("assigned-to", shortNames: ['a'], Description = "Assigned user ID")] int? assignedTo = null)
     {
         EnsureAuthenticated();
         try
@@ -174,10 +155,10 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
     public async Task EditAsync(
         [Argument(Description = "Epic ID (e.g., 123)")] int refid,
         [Option('p', Description = "Project ID to filter by")] int? project = null,
-        [Option('s', Description = "Subject/title")] string? subject = null,
-        [Option('d', Description = "Description")] string? description = null,
-        [Option("status", Description = "Status ID")] int? status = null,
-        [Option("assigned-to", Description = "Assigned user ID")] int? assignedTo = null)
+        [Option('t', Description = "Subject/title")] string? subject = null,
+        [Option('d', Description = "Description (support markdown)")] string? description = null,
+        [Option("status", shortNames: ['s'], Description = "Status ID")] int? status = null,
+        [Option("assigned-to", shortNames: ['a'], Description = "Assigned user ID")] int? assignedTo = null)
     {
         EnsureAuthenticated();
         try

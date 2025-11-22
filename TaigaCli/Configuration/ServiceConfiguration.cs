@@ -23,9 +23,7 @@ public static class ServiceConfiguration
 
         // Register command classes in DI
         foreach (var commandType in CommandDiscovery.DiscoverCommandTypes())
-        {
             builder.Services.AddTransient(commandType);
-        }
 
         // Configure logging
         builder.Logging.ClearProviders();

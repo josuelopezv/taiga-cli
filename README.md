@@ -2,6 +2,28 @@
 
 A powerful command-line interface for Taiga project management, built with .NET 10 and Cocona.
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Global install - Preferred method](#global-install---preferred-method)
+  - [Run from DotNet DNX](#run-from-dotnet-dnx)
+- [Usage](#usage)
+  - [Authentication](#authentication)
+  - [Projects](#projects)
+  - [User Stories](#user-stories)
+  - [Tasks & Issues](#tasks--issues)
+  - [Help](#help)
+- [Configuration](#configuration)
+- [AI Integration: MCP Server Replacement](#ai-integration-mcp-server-replacement)
+  - [For AI Developers](#for-ai-developers)
+  - [Instructions for AI LLMs](#instructions-for-ai-llms)
+  - [Benefits](#benefits)
+  - [Example AI Workflow](#example-ai-workflow)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
 
 - 🔐 **Authentication**: Login with Taiga.io or self-hosted instances
@@ -13,7 +35,6 @@ A powerful command-line interface for Taiga project management, built with .NET 
 - 📅 **Milestones**: Track sprint progress and burndown charts
 - 📚 **Wiki**: Access project documentation and history
 - 🔍 **Search**: Full-text search across projects or within specific projects
-- 🔔 **Notifications**: Check unread notifications and manage them
 - 📊 **Timeline**: View project and user activity timelines
 
 ## Installation
@@ -145,7 +166,7 @@ You can include this file in your AI system's context or use it as a reference w
 taiga project list                    # Find projects
 taiga userstory list -p 123          # List user stories
 taiga userstory get 456              # Get details
-taiga userstory create -p 123 -s "New Story"  # Create new story
+taiga userstory create -p 123 -t "New Story"  # Create new story
 ```
 
 The AI system then parses the output and presents it to the user in a conversational format.

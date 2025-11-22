@@ -1,9 +1,11 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Configuration;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("status", Description = "Commands for managing statuses, severities, priorities, and types")]
 public class StatusCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
     [Command("severities", Description = "List severities")]

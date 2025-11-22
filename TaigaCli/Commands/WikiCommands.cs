@@ -1,9 +1,11 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Configuration;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("wiki", Description = "Commands for managing wiki pages")]
 public class WikiCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
     [Command("list", Description = "List wiki pages for a project")]
@@ -91,26 +93,5 @@ public class WikiCommands(ITaigaApi api, AuthService authService) : BaseCommand(
             Environment.Exit(1);
         }
     }
-
-    // DISABLED: Returns 404 error - endpoint not available
-    // [Command("attachments", Description = "List wiki page attachments")]
-    // public async Task AttachmentsAsync([Argument(Description = "Wiki Page ID")] int id)
-    // {
-    //     EnsureAuthenticated();
-    //     try
-    //     {
-    //         var attachments = await api.GetWikiAttachmentsAsync(id);
-    //         Console.WriteLine($"Wiki Page Attachments (ID: {id}):");
-    //         foreach (var attachment in attachments)
-    //         {
-    //             Console.WriteLine(attachment.ToString());
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine($"Error fetching attachments: {ex.Message}");
-    //         Environment.Exit(1);
-    //     }
-    // }
 }
 

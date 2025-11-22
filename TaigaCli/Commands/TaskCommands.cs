@@ -1,9 +1,11 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Configuration;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("task", Description = "Commands for managing tasks")]
 public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
     [Command("list", Description = "List tasks (optionally filtered by project or user story)")]
@@ -94,36 +96,15 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
         }
     }
 
-    // DISABLED: Returns 404 error - endpoint not available
-    // [Command("attachments", Description = "List task attachments")]
-    // public async Task AttachmentsAsync([Argument(Description = "Task ID")] int id)
-    // {
-    //     EnsureAuthenticated();
-    //     try
-    //     {
-    //         var attachments = await api.GetTaskAttachmentsAsync(id);
-    //         Console.WriteLine($"Task Attachments (ID: {id}):");
-    //         foreach (var attachment in attachments)
-    //         {
-    //             Console.WriteLine(attachment.ToString());
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine($"Error fetching attachments: {ex.Message}");
-    //         Environment.Exit(1);
-    //     }
-    // }
-
     [Command("create", Description = "Create a new task")]
     public async Task CreateAsync(
-        [Option('p', Description = "Project ID")] int project,
-        [Option('s', Description = "Subject/title")] string subject,
-        [Option('d', Description = "Description")] string? description = null,
-        [Option("status", Description = "Status ID")] int? status = null,
-        [Option("assigned-to", Description = "Assigned user ID")] int? assignedTo = null,
-        [Option('u', Description = "User Story ID")] int? userStory = null,
-        [Option("milestone", Description = "Milestone ID")] int? milestone = null)
+    [Option('p', Description = "Project ID")] int project,
+    [Option('t', Description = "Subject/title")] string subject,
+    [Option('d', Description = "Description")] string? description = null,
+    [Option("status", shortNames: ['s'], Description = "Status ID")] int? status = null,
+    [Option("assigned-to", shortNames: ['a'], Description = "Assigned user ID")] int? assignedTo = null,
+    [Option('u', Description = "User Story ID (support markdown)")] int? userStory = null,
+    [Option("milestone", shortNames: ['m'], Description = "Milestone ID")] int? milestone = null)
     {
         EnsureAuthenticated();
         try
@@ -167,12 +148,12 @@ public class TaskCommands(ITaigaApi api, AuthService authService) : BaseCommand(
     public async Task EditAsync(
         [Argument(Description = "Task ID (e.g., 123)")] int refid,
         [Option('p', Description = "Project ID to filter by")] int? project = null,
-        [Option('s', Description = "Subject/title")] string? subject = null,
-        [Option('d', Description = "Description")] string? description = null,
-        [Option("status", Description = "Status ID")] int? status = null,
-        [Option("assigned-to", Description = "Assigned user ID")] int? assignedTo = null,
+        [Option('t', Description = "Subject/title")] string? subject = null,
+        [Option('d', Description = "Description (support markdown)")] string? description = null,
+        [Option("status", shortNames: ['s'], Description = "Status ID")] int? status = null,
+        [Option("assigned-to", shortNames: ['a'], Description = "Assigned user ID")] int? assignedTo = null,
         [Option('u', Description = "User Story ID")] int? userStory = null,
-        [Option("milestone", Description = "Milestone ID")] int? milestone = null)
+        [Option("milestone", shortNames: ['m'], Description = "Milestone ID")] int? milestone = null)
     {
         EnsureAuthenticated();
         try

@@ -1,9 +1,11 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Configuration;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("user", Description = "Commands for managing users")]
 public class UserCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
     [Command("me", Description = "Get current user information")]

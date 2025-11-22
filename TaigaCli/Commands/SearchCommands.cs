@@ -1,9 +1,11 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Configuration;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("search", Description = "Commands for searching within projects")]
 public class SearchCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
     [PrimaryCommand]

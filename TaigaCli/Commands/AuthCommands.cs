@@ -1,9 +1,11 @@
 using Cocona;
+using TaigaCli.Configuration;
 using TaigaCli.Models;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("auth", Description = "Commands for authentication")]
 public class AuthCommands(AuthService authService, TaigaApiFactory taigaApiFactory)
 {
     [Command("login", Description = "Authenticate with Taiga using username and password")]

@@ -1,5 +1,6 @@
 using Cocona;
 using Cocona.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace TaigaCli.Configuration;
@@ -15,48 +16,47 @@ public static class CommandTypeRegistrar
     /// </summary>
     /// <param name="app">The Cocona commands builder.</param>
     /// <param name="serviceProvider">The service provider for dependency injection.</param>
-    public static void RegisterCommandTypes(ICoconaCommandsBuilder app, IServiceProvider serviceProvider)
+    public static void RegisterCommandTypes(this CoconaApp app)
     {
         var commandTypes = CommandDiscovery.DiscoverCommandTypes();
         foreach (var commandType in commandTypes)
         {
-            var subCommandName = CommandDiscovery.GetSubCommandName(commandType);
-            RegisterCommandType(app, commandType, subCommandName, serviceProvider);
+            var subCommand = commandType.GetCustomAttribute<SubCommandAttribute>()
+                ?? throw new InvalidOperationException($"Command type {commandType.Name} must have SubCommandAttribute.");
+            commandType.RegisterCommandType(app, subCommand.Name, app.Services, subCommand.Description ?? string.Empty);
         }
     }
 
     /// <summary>
     /// Registers a single command type as a subcommand.
     /// </summary>
-    private static void RegisterCommandType(
-        ICoconaCommandsBuilder app,
-        Type commandType,
-        string subCommandName,
-        IServiceProvider serviceProvider) =>
+    private static void RegisterCommandType(this Type commandType,
+                                            ICoconaCommandsBuilder app,
+                                            string subCommandName,
+                                            IServiceProvider serviceProvider,
+                                            string Description) =>
             app.AddSubCommand(subCommandName, subCommandBuilder =>
             {
-                var commandMethods = GetCommandMethods(commandType);
+                var commandMethods = commandType.GetCommandMethods();
                 foreach (var method in commandMethods)
                 {
-                    var commandName = GetCommandName(method);
-                    var delegateType = DelegateTypeResolver.GetDelegateType(method);
-                    if (delegateType != null)
-                    {
-                        var factoryDelegate = ScopedDelegateFactory.CreateScopedDelegate(
-                            commandType,
-                            method,
-                            delegateType,
-                            serviceProvider);
-                        if (factoryDelegate != null)
-                            subCommandBuilder.AddCommand(commandName, factoryDelegate);
-                    }
+                    var delegateType = method.GetDelegateType();
+                    if (delegateType == null)
+                        continue;
+                    var factoryDelegate = commandType.CreateScopedDelegate(
+                        method,
+                        delegateType,
+                        serviceProvider);
+                    if (factoryDelegate != null)
+                        subCommandBuilder.AddCommand(method.GetCommandName(), factoryDelegate);
                 }
-            });
+            })
+            .WithDescription(Description);
 
     /// <summary>
     /// Gets all methods with the [Command] attribute from a command type.
     /// </summary>
-    private static IEnumerable<MethodInfo> GetCommandMethods(Type commandType) =>
+    private static IEnumerable<MethodInfo> GetCommandMethods(this Type commandType) =>
         commandType
             .GetMethods(BindingFlags.Public | BindingFlags.Instance)
             .Where(m => m.GetCustomAttribute<CommandAttribute>() != null);
@@ -64,10 +64,35 @@ public static class CommandTypeRegistrar
     /// <summary>
     /// Gets the command name from a method's [Command] attribute or derives it from the method name.
     /// </summary>
-    private static string GetCommandName(MethodInfo method)
+    private static string GetCommandName(this MethodInfo method) =>
+        method.GetCustomAttribute<CommandAttribute>()?.Name
+            ?? method.Name.ToLowerInvariant().Replace("async", "");
+
+    /// <summary>
+    /// Creates a delegate for a command method using a scoped service instance.
+    /// The delegate is bound to a temporary instance for reflection purposes only.
+    /// The actual instance will be resolved from DI when the command is executed.
+    /// </summary>
+    /// <param name="commandType">The type of the command class.</param>
+    /// <param name="method">The method to create a delegate for.</param>
+    /// <param name="delegateType">The type of delegate to create.</param>
+    /// <param name="serviceProvider">The service provider to resolve the command instance.</param>
+    /// <returns>The created delegate, or null if creation fails.</returns>
+    public static Delegate? CreateScopedDelegate(
+        this Type commandType,
+        MethodInfo method,
+        Type delegateType,
+        IServiceProvider serviceProvider)
     {
-        var commandAttr = method.GetCustomAttribute<CommandAttribute>();
-        return commandAttr?.Name ?? method.Name.ToLowerInvariant().Replace("async", "");
+        try
+        {
+            using var scope = serviceProvider.CreateScope();
+            return method.CreateDelegate(delegateType, scope.ServiceProvider.GetRequiredService(commandType));
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
 

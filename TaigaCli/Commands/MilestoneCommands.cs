@@ -1,9 +1,11 @@
 using Cocona;
 using TaigaCli.Api;
+using TaigaCli.Configuration;
 using TaigaCli.Services;
 
 namespace TaigaCli.Commands;
 
+[SubCommand("milestone", Description = "Commands for managing milestones")]
 public class MilestoneCommands(ITaigaApi api, AuthService authService) : BaseCommand(authService)
 {
     [Command("list", Description = "List milestones (optionally filtered by project)")]
