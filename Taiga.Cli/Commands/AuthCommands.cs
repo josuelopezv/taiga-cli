@@ -17,8 +17,9 @@ public class AuthCommands(AuthService authService, TaigaApiFactory taigaApiFacto
         try
         {
             var baseUrl = GetOrSetApiBaseUrl(apiUrl);
+            Console.WriteLine("Using API URL: {0}", baseUrl);
             // Create API client with the correct base URL
-            var api = taigaApiFactory.Create(baseUrl);
+            var api = taigaApiFactory.Create(baseUrl, false);
             var response = await api.AuthenticateAsync(new AuthRequest
             {
                 Username = username,
@@ -50,7 +51,6 @@ public class AuthCommands(AuthService authService, TaigaApiFactory taigaApiFacto
         // Ensure the URL ends with /api/v1 or add it if missing
         var normalizedUrl = NormalizeApiUrl(apiUrl.TrimEnd('/'));
         authService.SaveApiBaseUrl(normalizedUrl);
-        Console.WriteLine($"Using API URL: {normalizedUrl}");
         return normalizedUrl;
     }
 

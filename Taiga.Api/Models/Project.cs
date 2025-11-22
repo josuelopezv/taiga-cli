@@ -1,4 +1,6 @@
 //#nullable disable
+using System.Text.Json;
+
 namespace Taiga.Api.Models;
 
 public record Project(
@@ -35,7 +37,7 @@ public record Project(
     [property: JsonPropertyName("logo_big_url")] object LogoBigUrl,
     [property: JsonPropertyName("logo_small_url")] object LogoSmallUrl,
     [property: JsonPropertyName("looking_for_people_note")] string LookingForPeopleNote,
-    [property: JsonPropertyName("members")] IReadOnlyList<int> Members,
+    [property: JsonPropertyName("members")] IReadOnlyList<object>? Members, // on list is  int on detail is User
     [property: JsonPropertyName("modified_date")] DateTime ModifiedDate,
     //[property: JsonPropertyName("my_homepage")] bool? MyHomepage,
     [property: JsonPropertyName("my_permissions")] IReadOnlyList<string> MyPermissions,
@@ -67,11 +69,21 @@ public record Project(
         sb.AppendLine($"  ID: {Id}");
         sb.AppendLine($"  Name: {Name}");
         sb.AppendLine($"  Slug: {Slug}");
+        if (Members != default && Members.Count != default)
+            sb.AppendLine($"  Members: {GetMemberNames(Members)}");
         if (!string.IsNullOrWhiteSpace(Description))
-        {
-            sb.AppendLine("  Description:");
-            sb.AppendLine(Description);
-        }
+            sb.AppendLine($"  Description: \n{Description}");
         return sb.ToString().TrimEnd();
+    }
+
+    private static string? GetMemberNames(IReadOnlyList<object>? members)
+    {
+        if (members == null || (members.Count == 0 && members[0].GetType() == typeof(int)))
+            return null;
+        var names = new List<string>();
+        foreach (var member in members)
+            if (member is JsonElement jsonElement)
+                names.Add(jsonElement.GetProperty("username").ToString());
+        return string.Join(", ", names);
     }
 }

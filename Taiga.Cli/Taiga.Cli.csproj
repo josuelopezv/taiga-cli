@@ -14,7 +14,7 @@
 		<Product>Taiga CLI</Product>
 		<Description>A command-line interface for Taiga project management</Description>
 		<PackageTags>taiga;cli;project-management;agile</PackageTags>
-		<RepositoryUrl>https://github.com/josuelopezv/taiga-cli</RepositoryUrl>
+		<RepositoryUrl>https://github.com/josuelopezv/taiga-cli/tree/main/Taiga.Cli</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<StartupObject>Program</StartupObject>
