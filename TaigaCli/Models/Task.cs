@@ -53,18 +53,21 @@ public record TaigaTask(
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"  ID: #{Ref}");
+        sb.AppendLine($"  Owner: {OwnerExtraInfo.FullNameDisplay}");
+        if (AssignedToExtraInfo != null)
+            sb.AppendLine($"  Assigned To: {AssignedToExtraInfo.FullNameDisplay}");
         sb.AppendLine($"  Subject: {Subject}");
-        sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
         sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");
         if (Tags.Count != default)
             sb.AppendLine($"  Tags: {Tags.JoinTags(" - ")}");
-        //if (UserStoryExtraInfo != default)
-        //    sb.AppendLine($"  User Story: #{UserStoryExtraInfo.Ref} {UserStoryExtraInfo.Subject}");
         if (!string.IsNullOrWhiteSpace(Description))
         {
-            sb.AppendLine("  Description:");
-            sb.AppendLine(Description);
+            sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
+            sb.AppendLine($"  User Story: #{UserStoryExtraInfo.Ref} {UserStoryExtraInfo.Subject}");
+            sb.AppendLine($"  Description: \n{Description}");
         }
+        if (Attachments.Count != default)
+            sb.AppendLine($"  Attachments: {Attachments.Select(a => a.ToString()).JoinToString(" - ")}");
         return sb.ToString().TrimEnd();
     }
 }

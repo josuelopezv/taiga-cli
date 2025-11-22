@@ -16,7 +16,7 @@ public record Issue(
     [property: JsonPropertyName("subject")] string Subject,
     [property: JsonPropertyName("tags")] IReadOnlyList<List<string>> Tags,
     [property: JsonPropertyName("assigned_to")] object AssignedTo,
-    [property: JsonPropertyName("assigned_to_extra_info")] object AssignedToExtraInfo,
+    [property: JsonPropertyName("assigned_to_extra_info")] AssignedToExtraInfo AssignedToExtraInfo,
     [property: JsonPropertyName("attachments")] IReadOnlyList<object> Attachments,
     [property: JsonPropertyName("blocked_note")] string BlockedNote,
     [property: JsonPropertyName("blocked_note_html")] string BlockedNoteHtml,
@@ -49,9 +49,11 @@ public record Issue(
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"  ID: #{Ref}");
+        sb.AppendLine($"  Owner: {OwnerExtraInfo.FullNameDisplay}");
+        if (AssignedToExtraInfo != null)
+            sb.AppendLine($"  Assigned To: {AssignedToExtraInfo.FullNameDisplay}");
         sb.AppendLine($"  Subject: {Subject}");
-        sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
-        sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");
+        sb.AppendLine($"  Status: {StatusExtraInfo?.Name}");
         if (Severity != default)
             sb.AppendLine($"  Severity: {Severity}");
         if (Priority != default)
@@ -60,9 +62,11 @@ public record Issue(
             sb.AppendLine($"  Tags: {Tags.JoinTags(" - ")}");
         if (!string.IsNullOrWhiteSpace(Description))
         {
-            sb.AppendLine("  Description:");
-            sb.AppendLine(Description);
+            sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
+            sb.AppendLine($"  Description: \n{Description}");
         }
+        if (Attachments.Count != default)
+            sb.AppendLine($"  Attachments: {Attachments.Select(a => a.ToString()).JoinToString(" - ")}");
         return sb.ToString().TrimEnd();
     }
 }

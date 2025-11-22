@@ -8,12 +8,13 @@ namespace TaigaCli.Commands;
 public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<UserStoryCommands> logger) : BaseCommand(authService)
 {
     [Command("list", Description = "List user stories (optionally filtered by project ID)")]
-    public async Task ListAsync([Option('p', Description = "Project ID to filter by")] int? project = null)
+    public async Task ListAsync([Option('p', Description = "Project ID to filter by")] int? project = null,
+                                [Option('e', Description = "Epic ID to filter by")] int? epic = null)
     {
         EnsureAuthenticated();
         try
         {
-            var stories = await api.GetUserStoriesAsync(project);
+            var stories = await api.GetUserStoriesAsync(project, epic);
 
             if (stories.Count == 0)
             {
@@ -38,7 +39,7 @@ public class UserStoryCommands(ITaigaApi api, AuthService authService, ILogger<U
     }
 
     [Command("get", Description = "Get user story by ID")]
-    public async Task GetAsync([Argument(Description = "User Story ID")] int id, [Option('p', Description = "Project ID to filter by")] int? project = null)
+    public async Task GetAsync([Argument(Description = "User Story ID")] int id, [Option('p', Description = "Project ID to filter by")] int project)
     {
         EnsureAuthenticated();
         try

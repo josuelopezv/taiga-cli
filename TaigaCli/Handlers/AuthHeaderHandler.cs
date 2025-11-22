@@ -19,11 +19,12 @@ public class AuthHeaderHandler(AuthService authService, ILogger<AuthHeaderHandle
 
         var response = await base.SendAsync(request, cancellationToken);
 
-        logger.LogInformation("Request: {Method} {Uri} - Response: {StatusCode} Body: {Body}",
-            request.Method,
-            request.RequestUri,
-            response.StatusCode,
-            await response.Content.ReadAsStringAsync(cancellationToken));
+        if (!response.IsSuccessStatusCode)
+            logger.LogDebug("Request: {Method} {Uri} - Response: {StatusCode} Body: {Body}",
+                request.Method,
+                request.RequestUri,
+                response.StatusCode,
+                await response.Content.ReadAsStringAsync(cancellationToken));
 
         return response;
     }

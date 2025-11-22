@@ -44,17 +44,20 @@ public record Epic(
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"  ID: #{Ref}");
+        sb.AppendLine($"  Owner: {OwnerExtraInfo.FullNameDisplay}");
+        if (AssignedToExtraInfo != null)
+            sb.AppendLine($"  Assigned To: {AssignedToExtraInfo.FullNameDisplay}");
         sb.AppendLine($"  Subject: {Subject}");
-        sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
-        sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");
+        sb.AppendLine($"  Status: {StatusExtraInfo?.Name}");
         if (Tags.Count != default)
             sb.AppendLine($"  Tags: {Tags.JoinTags(" - ")}");
         if (!string.IsNullOrWhiteSpace(Description))
         {
-            sb.AppendLine("  Description:");
-            sb.AppendLine(Description);
+            sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
+            sb.AppendLine($"  Description: \n{Description}");
         }
-        sb.AppendLine($"  Attachments: {Attachments.Select(a => a.ToString()).JoinToString(" - ")}");
+        if (Attachments.Count != default)
+            sb.AppendLine($"  Attachments: {Attachments.Select(a => a.ToString()).JoinToString(" - ")}");
         return sb.ToString().TrimEnd();
     }
 }

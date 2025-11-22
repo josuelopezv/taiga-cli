@@ -11,7 +11,7 @@ public record UserStory(
         [property: JsonPropertyName("id")] int Id,
         [property: JsonPropertyName("ref")] int Ref,
         [property: JsonPropertyName("subject")] string Subject,
-        [property: JsonPropertyName("epics")] IReadOnlyList<EpicExtraInfo> Epics,
+        [property: JsonPropertyName("epics")] IReadOnlyList<EpicExtraInfo>? Epics,
         [property: JsonPropertyName("description")] string? Description,
         [property: JsonPropertyName("due_date")] object DueDate,
         [property: JsonPropertyName("due_date_reason")] string DueDateReason,
@@ -67,17 +67,24 @@ public record UserStory(
     {
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"  ID: #{Ref}");
+        sb.AppendLine($"  Owner: {OwnerExtraInfo.FullNameDisplay}");
+        if (AssignedToExtraInfo != null)
+            sb.AppendLine($"  Assigned To: {AssignedToExtraInfo.FullNameDisplay}");
         sb.AppendLine($"  Subject: {Subject}");
-        sb.AppendLine($"  Status: {Status} - {StatusExtraInfo?.Name}");
+        sb.AppendLine($"  Status: {StatusExtraInfo?.Name} Points: {Points}");
         if (Tasks.Count != default)
             sb.AppendLine($"  Tasks: {Tasks.Count} - {Tasks.Count} Tasks");
         if (Tags.Count != default)
             sb.AppendLine($"  Tags: {Tags.JoinTags(" - ")}");
         if (!string.IsNullOrWhiteSpace(Description))
         {
-            sb.AppendLine("  Description:");
-            sb.AppendLine(Description);
+            sb.AppendLine($"  Project: {Project} - {ProjectExtraInfo?.Name}");
+            if (Epics != null && Epics.Count != default)
+                sb.AppendLine($"  Epic(s): {Epics.Select(e => $"#{e.Ref} {e.Subject}").JoinToString(", ")}");
+            sb.AppendLine($"  Description: \n{Description}");
         }
+        if (Attachments.Count != default)
+            sb.AppendLine($"  Attachments: {Attachments.Select(a => a.ToString()).JoinToString(" - ")}");
         return sb.ToString().TrimEnd();
     }
 }

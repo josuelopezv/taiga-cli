@@ -35,7 +35,7 @@ public class EpicCommands(ITaigaApi api, AuthService authService) : BaseCommand(
     }
 
     [Command("get", Description = "Get epic by ID")]
-    public async Task GetAsync([Argument(Description = "Epic ID")] int id, [Option('p', Description = "Project ID to filter by")] int? project = null)
+    public async Task GetAsync([Argument(Description = "Epic ID")] int id, [Option('p', Description = "Project ID to filter by")] int project)
     {
         EnsureAuthenticated();
         try

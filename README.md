@@ -107,6 +107,49 @@ taiga userstory --help
 
 The CLI stores configuration (including the authentication token) in `~/.taiga-cli/config.json`.
 
+## AI Integration: MCP Server Replacement
+
+The Taiga CLI can be used as a replacement for an MCP (Model Context Protocol) server when integrating with AI assistants and LLMs. Instead of setting up a dedicated MCP server, AI systems can execute CLI commands directly and parse their output.
+
+### For AI Developers
+
+If you're building an AI assistant that needs to interact with Taiga, you can use this CLI tool by:
+
+1. **Executing Commands**: Have your AI system execute `taiga` commands programmatically
+2. **Parsing Output**: Parse the human-readable output from commands to extract structured data
+3. **Chaining Operations**: Chain multiple commands together to perform complex workflows
+
+### Instructions for AI LLMs
+
+We provide detailed instructions for AI LLMs in [`instructions-to-ai.md`](instructions-to-ai.md). This file contains:
+
+- Complete command reference
+- Usage patterns and workflows
+- Best practices for AI integration
+- Example workflows for common tasks
+- Error handling guidelines
+
+You can include this file in your AI system's context or use it as a reference when configuring your AI assistant to work with Taiga.
+
+### Benefits
+
+- **No MCP Server Required**: Skip the complexity of setting up and maintaining an MCP server
+- **Direct Integration**: Execute commands directly from your AI system
+- **Full Feature Access**: Access all CLI features without additional API layers
+- **Simple Authentication**: Use standard CLI authentication flow
+
+### Example AI Workflow
+
+```bash
+# AI system executes commands like:
+taiga project list                    # Find projects
+taiga userstory list -p 123          # List user stories
+taiga userstory get 456              # Get details
+taiga userstory create -p 123 -s "New Story"  # Create new story
+```
+
+The AI system then parses the output and presents it to the user in a conversational format.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
