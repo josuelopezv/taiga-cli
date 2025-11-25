@@ -1,8 +1,9 @@
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 using Taiga.Api;
+using Taiga.Mcp.Tools;
 
-namespace Taiga.Mcp.Tools;
+namespace Taiga.Mcp.DisabledTools;
 
 //[McpServerToolType]
 public class MilestoneTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
