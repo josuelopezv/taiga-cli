@@ -1,5 +1,6 @@
 using ModelContextProtocol.Server;
 using System.ComponentModel;
+using Taiga.Api.Models;
 
 namespace Taiga.Mcp.Tools;
 
@@ -64,6 +65,7 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
         [Description("Subject/title")] string subject,
         [Description("Description (support markdown)")] string? description = null,
         [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Points for Ux, Design, Front-end, Back-end")] Points? points = null,
         [Description("Assigned username")] string? assignedTo = null,
         [Description("Milestone ID")] int? milestone = null)
     {
@@ -81,6 +83,9 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
 
             if (!string.IsNullOrWhiteSpace(status))
                 data["status"] = GetStatusFromName(status, StatusType.UserStoryStatus, project);
+
+            if (points != null)
+                data["points"] = points;
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
                 data["assigned_to"] = GetUserIdFromUsername(assignedTo, project);
@@ -104,6 +109,7 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
         [Description("Subject/title")] string? subject = null,
         [Description("Description (support markdown)")] string? description = null,
         [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Points for Ux, Design, Front-end, Back-end")] Points? points = null,
         [Description("Assigned username")] string? assignedTo = null,
         [Description("Milestone ID")] int? milestone = null)
     {
@@ -123,6 +129,9 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
 
             if (!string.IsNullOrWhiteSpace(status))
                 data["status"] = GetStatusFromName(status, StatusType.UserStoryStatus, story.Project);
+
+            if (points != null)
+                data["points"] = points;
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
                 data["assigned_to"] = GetUserIdFromUsername(assignedTo, story.Project);
