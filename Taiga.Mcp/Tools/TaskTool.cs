@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
+using System.Text.Json;
 
 namespace Taiga.Mcp.Tools;
 
@@ -81,7 +82,7 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
     {
         try
         {
-            Logger.LogInformation("Creating new task in project {ProjectId} with subject '{Subject}'", project, subject);
+            Logger.LogInformation("Creating new task in project {ProjectId} with subject '{Subject}', user story {UserStoryId}", project, subject, userStory);
             await EnsureAuthenticated();
             var data = new Dictionary<string, object>
             {
@@ -117,7 +118,7 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
 
-            Logger.LogDebug("Creating task with {FieldCount} fields", data.Count);
+            Logger.LogDebug("Creating task with {FieldCount} fields", JsonSerializer.Serialize(data.Count));
             var task = await Api.CreateTaskAsync(data);
             Logger.LogInformation("Successfully created task with ID {TaskId}", task.Id);
             return $"Task created successfully:\n{task}";
