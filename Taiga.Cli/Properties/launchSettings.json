@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TaigaCli": {
+      "commandName": "Project",
+      "commandLineArgs": " -- userstory list"
+    }
+  }
+}
