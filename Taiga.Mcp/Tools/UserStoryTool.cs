@@ -1,20 +1,26 @@
 using ModelContextProtocol.Server;
 using System.ComponentModel;
-using Taiga.Api;
 
 namespace Taiga.Mcp.Tools;
 
 [McpServerToolType]
-public class UserStoryTool(ITaigaApi api, IAuthService authService) : BaseTool(authService)
+public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
-    [McpServerTool, Description("List user stories (optionally filtered by project ID)")]
+    [McpServerTool(Name = "ListUserStories", ReadOnly = true, Destructive = false), Description("List user stories (optionally filtered by project ID)")]
     public async Task<string> ListAsync([Description("Project ID to filter by")] int? project = null,
                                 [Description("Epic ID to filter by")] int? epic = null)
     {
         try
         {
             await EnsureAuthenticated();
-            var stories = await api.GetUserStoriesAsync(project, epic);
+            if (epic.HasValue)
+            {
+                if (!project.HasValue)
+                    return "Project ID must be specified when filtering by Epic ID.";
+                epic = (await Api.GetEpicAsync(epic.Value, project)).Id; // change from refId to id
+            }
+
+            var stories = await Api.GetUserStoriesAsync(project, epic);
 
             if (stories.Count == 0)
             {
@@ -37,13 +43,13 @@ public class UserStoryTool(ITaigaApi api, IAuthService authService) : BaseTool(a
         }
     }
 
-    [McpServerTool, Description("Get user story by ID")]
+    [McpServerTool(Name = "GetUserStory", ReadOnly = true, Destructive = false), Description("Get user story by ID")]
     public async Task<string> GetAsync([Description("User Story ID")] int id, [Description("Project ID to filter by")] int project)
     {
         try
         {
             await EnsureAuthenticated();
-            var story = await api.GetUserStoryAsync(id, project);
+            var story = await Api.GetUserStoryAsync(id, project);
             return $"User Story Details:\n{story}";
         }
         catch (Exception ex)
@@ -52,53 +58,13 @@ public class UserStoryTool(ITaigaApi api, IAuthService authService) : BaseTool(a
         }
     }
 
-    [McpServerTool, Description("Get user story history")]
-    public async Task<string> HistoryAsync([Description("User Story ID")] int id)
-    {
-        try
-        {
-            await EnsureAuthenticated();
-            var history = await api.GetUserStoryHistoryAsync(id);
-            var result = $"User Story History (ID: {id}):\n";
-            foreach (var entry in history)
-            {
-                result += entry.ToString() + "\n";
-            }
-            return result;
-        }
-        catch (Exception ex)
-        {
-            return $"Error fetching history: {ex.Message}";
-        }
-    }
-
-    [McpServerTool, Description("Get user story comments")]
-    public async Task<string> CommentsAsync([Description("User Story ID")] int id)
-    {
-        try
-        {
-            await EnsureAuthenticated();
-            var comments = await api.GetUserStoryCommentsAsync(id);
-            var result = $"User Story Comments (ID: {id}):\n";
-            foreach (var comment in comments)
-            {
-                result += comment.ToString() + "\n\n";
-            }
-            return result;
-        }
-        catch (Exception ex)
-        {
-            return $"Error fetching comments: {ex.Message}";
-        }
-    }
-
-    [McpServerTool, Description("Create a new user story")]
+    [McpServerTool(Name = "CreateUserStory"), Description("Create a new user story")]
     public async Task<string> CreateAsync(
         [Description("Project ID")] int project,
         [Description("Subject/title")] string subject,
         [Description("Description (support markdown)")] string? description = null,
-        [Description("Status ID")] int? status = null,
-        [Description("Assigned user ID")] int? assignedTo = null,
+        [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Assigned username")] string? assignedTo = null,
         [Description("Milestone ID")] int? milestone = null)
     {
         try
@@ -113,16 +79,16 @@ public class UserStoryTool(ITaigaApi api, IAuthService authService) : BaseTool(a
             if (!string.IsNullOrWhiteSpace(description))
                 data["description"] = description;
 
-            if (status.HasValue)
-                data["status"] = status.Value;
+            if (!string.IsNullOrWhiteSpace(status))
+                data["status"] = GetStatusFromName(status, StatusType.UserStoryStatus, project);
 
-            if (assignedTo.HasValue)
-                data["assigned_to"] = assignedTo.Value;
+            if (!string.IsNullOrWhiteSpace(assignedTo))
+                data["assigned_to"] = GetUserIdFromUsername(assignedTo, project);
 
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
 
-            var story = await api.CreateUserStoryAsync(data);
+            var story = await Api.CreateUserStoryAsync(data);
             return $"User story created successfully:\n{story}";
         }
         catch (Exception ex)
@@ -131,21 +97,21 @@ public class UserStoryTool(ITaigaApi api, IAuthService authService) : BaseTool(a
         }
     }
 
-    [McpServerTool, Description("Edit a user story by ID")]
+    [McpServerTool(Name = "EditUserStory"), Description("Edit a user story by ID")]
     public async Task<string> EditAsync(
         [Description("User Story ID")] int refid,
-        [Description("Project ID to filter by")] int? project = null,
+        [Description("Project ID")] int project,
         [Description("Subject/title")] string? subject = null,
         [Description("Description (support markdown)")] string? description = null,
-        [Description("Status ID")] int? status = null,
-        [Description("Assigned user ID")] int? assignedTo = null,
+        [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Assigned username")] string? assignedTo = null,
         [Description("Milestone ID")] int? milestone = null)
     {
         try
         {
             await EnsureAuthenticated();
             // Get the user story by ref to obtain its ID
-            var story = await api.GetUserStoryAsync(refid, project);
+            var story = await Api.GetUserStoryAsync(refid, project);
 
             var data = new Dictionary<string, object>();
 
@@ -155,11 +121,11 @@ public class UserStoryTool(ITaigaApi api, IAuthService authService) : BaseTool(a
             if (!string.IsNullOrWhiteSpace(description))
                 data["description"] = description;
 
-            if (status.HasValue)
-                data["status"] = status.Value;
+            if (!string.IsNullOrWhiteSpace(status))
+                data["status"] = GetStatusFromName(status, StatusType.UserStoryStatus, story.Project);
 
-            if (assignedTo.HasValue)
-                data["assigned_to"] = assignedTo.Value;
+            if (!string.IsNullOrWhiteSpace(assignedTo))
+                data["assigned_to"] = GetUserIdFromUsername(assignedTo, story.Project);
 
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
@@ -169,7 +135,7 @@ public class UserStoryTool(ITaigaApi api, IAuthService authService) : BaseTool(a
                 return "No fields to update. Please specify at least one field to modify.";
             }
 
-            var updatedStory = await api.UpdateUserStoryAsync(story.Id, data);
+            var updatedStory = await Api.UpdateUserStoryAsync(story.Id, data);
             return $"User story updated successfully:\n{updatedStory}";
         }
         catch (Exception ex)

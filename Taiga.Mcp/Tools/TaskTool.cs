@@ -1,13 +1,12 @@
 using ModelContextProtocol.Server;
 using System.ComponentModel;
-using Taiga.Api;
 
 namespace Taiga.Mcp.Tools;
 
-[McpServerToolType]
-public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authService)
+//[McpServerToolType]
+public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
-    [McpServerTool, Description("List tasks (optionally filtered by project or user story)")]
+    [McpServerTool(Name = "ListTasks", ReadOnly = true, Destructive = false), Description("List tasks (optionally filtered by project or user story)")]
     public async Task<string> ListAsync(
         [Description("Project ID to filter by")] int? project = null,
         [Description("User Story ID to filter by")] int? userStory = null)
@@ -15,7 +14,13 @@ public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         try
         {
             await EnsureAuthenticated();
-            var tasks = await api.GetTasksAsync(project, userStory);
+            if (userStory.HasValue)
+            {
+                if (!project.HasValue)
+                    return "Project ID must be specified when filtering by User Story ID.";
+                userStory = (await Api.GetUserStoryAsync(userStory.Value, project)).Id; // change from refId to id
+            }
+            var tasks = await Api.GetTasksAsync(project, userStory);
 
             if (tasks.Count == 0)
             {
@@ -35,13 +40,13 @@ public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("Get task by ID")]
+    [McpServerTool(Name = "GetTask", ReadOnly = true, Destructive = false), Description("Get task by ID")]
     public async Task<string> GetAsync([Description("Task ID")] int id, [Description("Project ID to filter by")] int project)
     {
         try
         {
             await EnsureAuthenticated();
-            var task = await api.GetTaskAsync(id, project);
+            var task = await Api.GetTaskAsync(id, project);
             return $"Task Details:\n{task}";
         }
         catch (Exception ex)
@@ -50,53 +55,13 @@ public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("Get task history")]
-    public async Task<string> HistoryAsync([Description("Task ID")] int id)
-    {
-        try
-        {
-            await EnsureAuthenticated();
-            var history = await api.GetTaskHistoryAsync(id);
-            var result = $"Task History (ID: {id}):\n";
-            foreach (var entry in history)
-            {
-                result += entry.ToString() + "\n";
-            }
-            return result;
-        }
-        catch (Exception ex)
-        {
-            return $"Error fetching history: {ex.Message}";
-        }
-    }
-
-    [McpServerTool, Description("Get task comments")]
-    public async Task<string> CommentsAsync([Description("Task ID")] int id)
-    {
-        try
-        {
-            await EnsureAuthenticated();
-            var comments = await api.GetTaskCommentsAsync(id);
-            var result = $"Task Comments (ID: {id}):\n";
-            foreach (var comment in comments)
-            {
-                result += comment.ToString() + "\n\n";
-            }
-            return result;
-        }
-        catch (Exception ex)
-        {
-            return $"Error fetching comments: {ex.Message}";
-        }
-    }
-
-    [McpServerTool, Description("Create a new task")]
+    [McpServerTool(Name = "CreateTask"), Description("Create a new task")]
     public async Task<string> CreateAsync(
         [Description("Project ID")] int project,
         [Description("Subject/title")] string subject,
         [Description("Description")] string? description = null,
-        [Description("Status ID")] int? status = null,
-        [Description("Assigned user ID")] int? assignedTo = null,
+        [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null, // todo change to status name, use api to get id based on name
+        [Description("Assigned username")] string? assignedTo = null,
         [Description("User Story ID")] int? userStory = null,
         [Description("Milestone ID")] int? milestone = null)
     {
@@ -112,22 +77,22 @@ public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
             if (!string.IsNullOrWhiteSpace(description))
                 data["description"] = description;
 
-            if (status.HasValue)
-                data["status"] = status.Value;
+            if (!string.IsNullOrWhiteSpace(status))
+                data["status"] = GetStatusFromName(status, StatusType.TaskStatus, project);
 
-            if (assignedTo.HasValue)
-                data["assigned_to"] = assignedTo.Value;
+            if (!string.IsNullOrWhiteSpace(assignedTo))
+                data["assigned_to"] = GetUserIdFromUsername(assignedTo, project);
 
             if (userStory.HasValue)
             {
-                var story = await api.GetUserStoryAsync(userStory.Value, project);
+                var story = await Api.GetUserStoryAsync(userStory.Value, project);
                 data["user_story"] = story.Id;
             }
 
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
 
-            var task = await api.CreateTaskAsync(data);
+            var task = await Api.CreateTaskAsync(data);
             return $"Task created successfully:\n{task}";
         }
         catch (Exception ex)
@@ -136,14 +101,14 @@ public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("Edit a task by ID")]
+    [McpServerTool(Name = "EditTask"), Description("Edit a task by ID")]
     public async Task<string> EditAsync(
         [Description("Task ID")] int refid,
-        [Description("Project ID to filter by")] int? project = null,
+        [Description("Project ID")] int project,
         [Description("Subject/title")] string? subject = null,
         [Description("Description")] string? description = null,
-        [Description("Status ID")] int? status = null,
-        [Description("Assigned user ID")] int? assignedTo = null,
+        [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Assigned username")] string? assignedTo = null,
         [Description("User Story ID")] int? userStory = null,
         [Description("Milestone ID")] int? milestone = null)
     {
@@ -151,7 +116,7 @@ public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         {
             await EnsureAuthenticated();
             // Get the task by ref to obtain its ID
-            var task = await api.GetTaskAsync(refid, project);
+            var task = await Api.GetTaskAsync(refid, project);
 
             var data = new Dictionary<string, object>();
 
@@ -161,11 +126,11 @@ public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
             if (!string.IsNullOrWhiteSpace(description))
                 data["description"] = description;
 
-            if (status.HasValue)
-                data["status"] = status.Value;
+            if (!string.IsNullOrWhiteSpace(status))
+                data["status"] = GetStatusFromName(status, StatusType.TaskStatus, task.Project);
 
-            if (assignedTo.HasValue)
-                data["assigned_to"] = assignedTo.Value;
+            if (!string.IsNullOrWhiteSpace(assignedTo))
+                data["assigned_to"] = GetUserIdFromUsername(assignedTo, task.Project);
 
             if (userStory.HasValue)
                 data["user_story"] = userStory.Value;
@@ -178,7 +143,7 @@ public class TaskTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
                 return "No fields to update. Please specify at least one field to modify.";
             }
 
-            var updatedTask = await api.UpdateTaskAsync(task.Id, data);
+            var updatedTask = await Api.UpdateTaskAsync(task.Id, data);
             return $"Task updated successfully:\n{updatedTask}";
         }
         catch (Exception ex)

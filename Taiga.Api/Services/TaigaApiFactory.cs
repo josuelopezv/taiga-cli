@@ -5,11 +5,12 @@ namespace Taiga.Api.Services;
 
 public class TaigaApiFactory(IAuthService authService)
 {
-    //public const string AuthHttpClientName = "TaigaAuthClient";
-
     public ITaigaApi Create() => Create(authService.GetApiBaseUrl());
 
-    public ITaigaApi Create(string url) =>
+    public ITaigaApi Create(string url) => CreateBasic(url, (httpRequest, c) => authService.GetTokenAsync());
+
+    public static ITaigaApi CreateBasic(string url,
+                                        Func<HttpRequestMessage, CancellationToken, Task<string>>? authorizationHeaderValueGetter = null) =>
         RestService.For<ITaigaApi>(url, new()
         {
             ContentSerializer = new JsonContentSerializer(new JsonSerializerOptions
@@ -18,7 +19,7 @@ public class TaigaApiFactory(IAuthService authService)
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             }),
             DeserializationExceptionFactory = async (httpResponseMessage, ex) => throw ex,
-            AuthorizationHeaderValueGetter = (httpRequest, c) => authService.GetTokenAsync(),
+            AuthorizationHeaderValueGetter = authorizationHeaderValueGetter,
             ExceptionFactory = async (httpResponseMessage) =>
                 httpResponseMessage.IsSuccessStatusCode
                 ? null

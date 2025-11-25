@@ -1,13 +1,12 @@
 using ModelContextProtocol.Server;
 using System.ComponentModel;
-using Taiga.Api;
 
 namespace Taiga.Mcp.Tools;
 
 [McpServerToolType]
-public class SearchTool(ITaigaApi api, IAuthService authService) : BaseTool(authService)
+public class SearchTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
-    [McpServerTool, Description("Search within a project")]
+    [McpServerTool(Name = "SearchProject", ReadOnly = true, Destructive = false), Description("Search within a project")]
     public async Task<string> ProjectAsync(
         [Description("Project ID")] int project,
         [Description("Search text")] string text)
@@ -15,7 +14,7 @@ public class SearchTool(ITaigaApi api, IAuthService authService) : BaseTool(auth
         try
         {
             await EnsureAuthenticated();
-            var results = await api.SearchProjectAsync(project, text);
+            var results = await Api.SearchProjectAsync(project, text);
             var result = $"{results.Count} Search Results in Project {project} for '{text}':\n";
             result += results.ToString();
             return result;

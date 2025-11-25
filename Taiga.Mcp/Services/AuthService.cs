@@ -1,6 +1,8 @@
-﻿namespace Taiga.Mcp.Services;
+﻿using Taiga.Api.Models;
 
-public class AuthService(TaigaApiFactory taigaApiFactory) : IAuthService
+namespace Taiga.Mcp.Services;
+
+public class AuthService : IAuthService
 {
     public string GetApiBaseUrl() =>
        NormalizeApiUrl(Environment.GetEnvironmentVariable("TAIGA_API_URL") ?? throw new InvalidOperationException("API URL not configured."));
@@ -8,8 +10,8 @@ public class AuthService(TaigaApiFactory taigaApiFactory) : IAuthService
     {
         var username = Environment.GetEnvironmentVariable("TAIGA_USERNAME");
         var password = Environment.GetEnvironmentVariable("TAIGA_PASSWORD");
-        var api = taigaApiFactory.Create();
-        var authResponse = await api.AuthenticateAsync(new Taiga.Api.Models.AuthRequest
+        var api = TaigaApiFactory.CreateBasic(GetApiBaseUrl());
+        var authResponse = await api.AuthenticateAsync(new AuthRequest
         {
             Username = username ?? string.Empty,
             Password = password ?? string.Empty

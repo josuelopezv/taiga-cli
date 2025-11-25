@@ -4,16 +4,16 @@ using Taiga.Api;
 
 namespace Taiga.Mcp.Tools;
 
-[McpServerToolType]
-public class MilestoneTool(ITaigaApi api, IAuthService authService) : BaseTool(authService)
+//[McpServerToolType]
+public class MilestoneTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
-    [McpServerTool, Description("List milestones (optionally filtered by project)")]
+    [McpServerTool(Name = "ListMilestones", ReadOnly = true, Destructive = false), Description("List milestones (optionally filtered by project)")]
     public async Task<string> ListAsync([Description("Project ID to filter by")] int? project = null)
     {
         try
         {
             await EnsureAuthenticated();
-            var milestones = await api.GetMilestonesAsync(project);
+            var milestones = await Api.GetMilestonesAsync(project);
 
             if (milestones.Count == 0)
             {
@@ -33,13 +33,13 @@ public class MilestoneTool(ITaigaApi api, IAuthService authService) : BaseTool(a
         }
     }
 
-    [McpServerTool, Description("Get milestone by ID")]
+    [McpServerTool(Name = "GetMilestone", ReadOnly = true, Destructive = false), Description("Get milestone by ID")]
     public async Task<string> GetAsync([Description("Milestone ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var milestone = await api.GetMilestoneAsync(id);
+            var milestone = await Api.GetMilestoneAsync(id);
             return $"Milestone Details:\n{milestone}";
         }
         catch (Exception ex)
@@ -48,13 +48,13 @@ public class MilestoneTool(ITaigaApi api, IAuthService authService) : BaseTool(a
         }
     }
 
-    [McpServerTool, Description("Get milestone statistics")]
+    [McpServerTool(Name = "GetMilestoneStats", ReadOnly = true, Destructive = false), Description("Get milestone statistics")]
     public async Task<string> StatsAsync([Description("Milestone ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var stats = await api.GetMilestoneStatsAsync(id);
+            var stats = await Api.GetMilestoneStatsAsync(id);
             var result = $"Milestone Statistics (ID: {id}):\n";
             foreach (var stat in stats)
             {
@@ -68,13 +68,13 @@ public class MilestoneTool(ITaigaApi api, IAuthService authService) : BaseTool(a
         }
     }
 
-    [McpServerTool, Description("Get milestone user stories")]
+    [McpServerTool(Name = "GetMilestoneUserStories", ReadOnly = true, Destructive = false), Description("Get milestone user stories")]
     public async Task<string> UserStoriesAsync([Description("Milestone ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var stories = await api.GetMilestoneUserStoriesAsync(id);
+            var stories = await Api.GetMilestoneUserStoriesAsync(id);
             var result = $"Milestone User Stories (ID: {id}):\n";
             foreach (var story in stories)
             {

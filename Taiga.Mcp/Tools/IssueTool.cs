@@ -1,19 +1,18 @@
 using ModelContextProtocol.Server;
 using System.ComponentModel;
-using Taiga.Api;
 
 namespace Taiga.Mcp.Tools;
 
 [McpServerToolType]
-public class IssueTool(ITaigaApi api, IAuthService authService) : BaseTool(authService)
+public class IssueTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
-    [McpServerTool, Description("List issues (optionally filtered by project)")]
+    [McpServerTool(Name = "ListIssues", ReadOnly = true, Destructive = false), Description("List issues (optionally filtered by project)")]
     public async Task<string> ListAsync([Description("Project ID to filter by")] int? project = null)
     {
         try
         {
             await EnsureAuthenticated();
-            var issues = await api.GetIssuesAsync(project);
+            var issues = await Api.GetIssuesAsync(project);
 
             if (issues.Count == 0)
             {
@@ -33,13 +32,13 @@ public class IssueTool(ITaigaApi api, IAuthService authService) : BaseTool(authS
         }
     }
 
-    [McpServerTool, Description("Get issue by ID")]
+    [McpServerTool(Name = "GetIssue", ReadOnly = true, Destructive = false), Description("Get issue by ID")]
     public async Task<string> GetAsync([Description("Issue ID")] int id, [Description("Project ID to filter by")] int project)
     {
         try
         {
             await EnsureAuthenticated();
-            var issue = await api.GetIssueAsync(id, project);
+            var issue = await Api.GetIssueAsync(id, project);
             return $"Issue Details:\n{issue}";
         }
         catch (Exception ex)
@@ -48,56 +47,16 @@ public class IssueTool(ITaigaApi api, IAuthService authService) : BaseTool(authS
         }
     }
 
-    [McpServerTool, Description("Get issue history")]
-    public async Task<string> HistoryAsync([Description("Issue ID")] int id)
-    {
-        try
-        {
-            await EnsureAuthenticated();
-            var history = await api.GetIssueHistoryAsync(id);
-            var result = $"Issue History (ID: {id}):\n";
-            foreach (var entry in history)
-            {
-                result += entry.ToString() + "\n";
-            }
-            return result;
-        }
-        catch (Exception ex)
-        {
-            return $"Error fetching history: {ex.Message}";
-        }
-    }
-
-    [McpServerTool, Description("Get issue comments")]
-    public async Task<string> CommentsAsync([Description("Issue ID")] int id)
-    {
-        try
-        {
-            await EnsureAuthenticated();
-            var comments = await api.GetIssueCommentsAsync(id);
-            var result = $"Issue Comments (ID: {id}):\n";
-            foreach (var comment in comments)
-            {
-                result += comment.ToString() + "\n\n";
-            }
-            return result;
-        }
-        catch (Exception ex)
-        {
-            return $"Error fetching comments: {ex.Message}";
-        }
-    }
-
-    [McpServerTool, Description("Create a new issue")]
+    [McpServerTool(Name = "CreateIssue"), Description("Create a new issue")]
     public async Task<string> CreateAsync(
         [Description("Project ID")] int project,
         [Description("Subject/title")] string subject,
         [Description("Description (support markdown)")] string? description = null,
-        [Description("Status ID")] int? status = null,
-        [Description("Issue type ID")] int? type = null,
-        [Description("Priority ID")] int? priority = null,
-        [Description("Severity ID")] int? severity = null,
-        [Description("Assigned user ID")] int? assignedTo = null)
+        [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Issue type Name (e.g. \"Bug\", \"Feature\", \"Task\")")] string? type = null,
+        [Description("Priority Name (e.g. \"Low\", \"Medium\", \"High\")")] string? priority = null,
+        [Description("Severity Name (e.g. \"Minor\", \"Major\", \"Critical\")")] string? severity = null,
+        [Description("Assigned username")] string? assignedTo = null)
     {
         try
         {
@@ -111,22 +70,22 @@ public class IssueTool(ITaigaApi api, IAuthService authService) : BaseTool(authS
             if (!string.IsNullOrWhiteSpace(description))
                 data["description"] = description;
 
-            if (status.HasValue)
-                data["status"] = status.Value;
+            if (!string.IsNullOrWhiteSpace(status))
+                data["status"] = GetStatusFromName(status, StatusType.IssueStatus, project);
 
-            if (type.HasValue)
-                data["type"] = type.Value;
+            if (!string.IsNullOrWhiteSpace(type))
+                data["type"] = GetStatusFromName(type, StatusType.IssueType, project);
 
-            if (priority.HasValue)
-                data["priority"] = priority.Value;
+            if (!string.IsNullOrWhiteSpace(priority))
+                data["priority"] = GetStatusFromName(priority, StatusType.Priority, project);
 
-            if (severity.HasValue)
-                data["severity"] = severity.Value;
+            if (!string.IsNullOrWhiteSpace(severity))
+                data["severity"] = GetStatusFromName(severity, StatusType.Severity, project);
 
-            if (assignedTo.HasValue)
-                data["assigned_to"] = assignedTo.Value;
+            if (!string.IsNullOrWhiteSpace(assignedTo))
+                data["assigned_to"] = GetUserIdFromUsername(assignedTo, project);
 
-            var issue = await api.CreateIssueAsync(data);
+            var issue = await Api.CreateIssueAsync(data);
             return $"Issue created successfully:\n{issue}";
         }
         catch (Exception ex)
@@ -135,23 +94,23 @@ public class IssueTool(ITaigaApi api, IAuthService authService) : BaseTool(authS
         }
     }
 
-    [McpServerTool, Description("Edit an issue by ID")]
+    [McpServerTool(Name = "EditIssue"), Description("Edit an issue by ID")]
     public async Task<string> EditAsync(
         [Description("Issue ID")] int refid,
-        [Description("Project ID to filter by")] int? project = null,
+        [Description("Project ID")] int project,
         [Description("Subject/title")] string? subject = null,
         [Description("Description (support markdown)")] string? description = null,
-        [Description("Status ID")] int? status = null,
-        [Description("Issue type ID")] int? type = null,
-        [Description("Priority ID")] int? priority = null,
-        [Description("Severity ID")] int? severity = null,
-        [Description("Assigned user ID")] int? assignedTo = null)
+        [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Issue type Name (e.g. \"Bug\", \"Feature\", \"Task\")")] string? type = null,
+        [Description("Priority Name (e.g. \"Low\", \"Medium\", \"High\")")] string? priority = null,
+        [Description("Severity Name (e.g. \"Minor\", \"Major\", \"Critical\")")] string? severity = null,
+        [Description("Assigned username")] string? assignedTo = null)
     {
         try
         {
             await EnsureAuthenticated();
             // Get the issue by ref to obtain its ID
-            var issue = await api.GetIssueAsync(refid, project);
+            var issue = await Api.GetIssueAsync(refid, project);
 
             var data = new Dictionary<string, object>();
 
@@ -161,27 +120,27 @@ public class IssueTool(ITaigaApi api, IAuthService authService) : BaseTool(authS
             if (!string.IsNullOrWhiteSpace(description))
                 data["description"] = description;
 
-            if (status.HasValue)
-                data["status"] = status.Value;
+            if (!string.IsNullOrWhiteSpace(status))
+                data["status"] = GetStatusFromName(status, StatusType.IssueStatus, issue.Project);
 
-            if (type.HasValue)
-                data["type"] = type.Value;
+            if (!string.IsNullOrWhiteSpace(type))
+                data["type"] = GetStatusFromName(type, StatusType.IssueType, issue.Project);
 
-            if (priority.HasValue)
-                data["priority"] = priority.Value;
+            if (!string.IsNullOrWhiteSpace(priority))
+                data["priority"] = GetStatusFromName(priority, StatusType.Priority, issue.Project);
 
-            if (severity.HasValue)
-                data["severity"] = severity.Value;
+            if (!string.IsNullOrWhiteSpace(severity))
+                data["severity"] = GetStatusFromName(severity, StatusType.Severity, issue.Project);
 
-            if (assignedTo.HasValue)
-                data["assigned_to"] = assignedTo.Value;
+            if (!string.IsNullOrWhiteSpace(assignedTo))
+                data["assigned_to"] = GetUserIdFromUsername(assignedTo, issue.Project);
 
             if (data.Count == 0)
             {
                 return "No fields to update. Please specify at least one field to modify.";
             }
 
-            var updatedIssue = await api.UpdateIssueAsync(issue.Id, data);
+            var updatedIssue = await Api.UpdateIssueAsync(issue.Id, data);
             return $"Issue updated successfully:\n{updatedIssue}";
         }
         catch (Exception ex)

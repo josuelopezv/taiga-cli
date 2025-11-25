@@ -4,16 +4,16 @@ using Taiga.Api;
 
 namespace Taiga.Mcp.Tools;
 
-[McpServerToolType]
-public class WebhookTool(ITaigaApi api, IAuthService authService) : BaseTool(authService)
+//[McpServerToolType]
+public class WebhookTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
-    [McpServerTool, Description("List webhooks (optionally filtered by project)")]
+    [McpServerTool(Name = "ListWebhooks", ReadOnly = true, Destructive = false), Description("List webhooks (optionally filtered by project)")]
     public async Task<string> ListAsync([Description("Project ID to filter by")] int? project = null)
     {
         try
         {
             await EnsureAuthenticated();
-            var webhooks = await api.GetWebhooksAsync(project);
+            var webhooks = await Api.GetWebhooksAsync(project);
 
             if (webhooks.Count == 0)
             {
@@ -37,13 +37,13 @@ public class WebhookTool(ITaigaApi api, IAuthService authService) : BaseTool(aut
         }
     }
 
-    [McpServerTool, Description("Get webhook by ID")]
+    [McpServerTool(Name = "GetWebhook", ReadOnly = true, Destructive = false), Description("Get webhook by ID")]
     public async Task<string> GetAsync([Description("Webhook ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var webhook = await api.GetWebhookAsync(id);
+            var webhook = await Api.GetWebhookAsync(id);
             return $"Webhook Details:\n  ID: {webhook.Id}\n  Name: {webhook.Name}\n  URL: {webhook.Url}\n  Project: {webhook.Project}\n  Active: {webhook.Active}";
         }
         catch (Exception ex)
@@ -52,13 +52,13 @@ public class WebhookTool(ITaigaApi api, IAuthService authService) : BaseTool(aut
         }
     }
 
-    [McpServerTool, Description("Get webhook logs")]
+    [McpServerTool(Name = "GetWebhookLogs", ReadOnly = true, Destructive = false), Description("Get webhook logs")]
     public async Task<string> LogsAsync([Description("Webhook ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var logs = await api.GetWebhookLogsAsync(id);
+            var logs = await Api.GetWebhookLogsAsync(id);
             var result = $"Webhook Logs (ID: {id}):\n";
             foreach (var log in logs)
             {

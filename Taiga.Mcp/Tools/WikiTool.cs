@@ -4,16 +4,16 @@ using Taiga.Api;
 
 namespace Taiga.Mcp.Tools;
 
-[McpServerToolType]
-public class WikiTool(ITaigaApi api, IAuthService authService) : BaseTool(authService)
+//[McpServerToolType]
+public class WikiTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
-    [McpServerTool, Description("List wiki pages for a project")]
+    [McpServerTool(Name = "ListWikiPages", ReadOnly = true, Destructive = false), Description("List wiki pages for a project")]
     public async Task<string> ListAsync([Description("Project ID")] int project)
     {
         try
         {
             await EnsureAuthenticated();
-            var pages = await api.GetWikiPagesAsync(project);
+            var pages = await Api.GetWikiPagesAsync(project);
 
             if (pages.Count == 0)
             {
@@ -33,13 +33,13 @@ public class WikiTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("Get wiki page by ID")]
+    [McpServerTool(Name = "GetWikiPage", ReadOnly = true, Destructive = false), Description("Get wiki page by ID")]
     public async Task<string> GetAsync([Description("Wiki Page ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var page = await api.GetWikiPageAsync(id);
+            var page = await Api.GetWikiPageAsync(id);
             return $"Wiki Page Details:\n{page}";
         }
         catch (Exception ex)
@@ -48,13 +48,13 @@ public class WikiTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("Get wiki page history")]
+    [McpServerTool(Name = "GetWikiHistory", ReadOnly = true, Destructive = false), Description("Get wiki page history")]
     public async Task<string> HistoryAsync([Description("Wiki Page ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var history = await api.GetWikiHistoryAsync(id);
+            var history = await Api.GetWikiHistoryAsync(id);
             var result = $"Wiki Page History (ID: {id}):\n";
             foreach (var entry in history)
             {
@@ -68,13 +68,13 @@ public class WikiTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("Get wiki page comments")]
+    [McpServerTool(Name = "GetWikiComments", ReadOnly = true, Destructive = false), Description("Get wiki page comments")]
     public async Task<string> CommentsAsync([Description("Wiki Page ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var comments = await api.GetWikiCommentsAsync(id);
+            var comments = await Api.GetWikiCommentsAsync(id);
             var result = $"Wiki Page Comments (ID: {id}):\n";
             foreach (var comment in comments)
             {

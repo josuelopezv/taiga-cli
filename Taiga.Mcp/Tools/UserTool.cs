@@ -4,16 +4,16 @@ using Taiga.Api;
 
 namespace Taiga.Mcp.Tools;
 
-[McpServerToolType]
-public class UserTool(ITaigaApi api, IAuthService authService) : BaseTool(authService)
+//[McpServerToolType]
+public class UserTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
-    [McpServerTool, Description("Get current user information")]
+    [McpServerTool(Name = "GetCurrentUser", ReadOnly = true, Destructive = false), Description("Get current user information")]
     public async Task<string> MeAsync()
     {
         try
         {
             await EnsureAuthenticated();
-            var user = await api.GetCurrentUserAsync();
+            var user = await Api.GetCurrentUserAsync();
             return $"Current User:\n{user}";
         }
         catch (Exception ex)
@@ -22,13 +22,13 @@ public class UserTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("Get user by ID")]
+    [McpServerTool(Name = "GetUser", ReadOnly = true, Destructive = false), Description("Get user by ID")]
     public async Task<string> GetAsync([Description("User ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var user = await api.GetUserAsync(id);
+            var user = await Api.GetUserAsync(id);
             return $"User Details:\n{user}";
         }
         catch (Exception ex)
@@ -37,13 +37,13 @@ public class UserTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("List users (optionally filtered by project)")]
+    [McpServerTool(Name = "ListUsers", ReadOnly = true, Destructive = false), Description("List users (optionally filtered by project)")]
     public async Task<string> ListAsync([Description("Project ID to filter by")] int? project = null)
     {
         try
         {
             await EnsureAuthenticated();
-            var users = await api.GetUsersAsync(project);
+            var users = await Api.GetUsersAsync(project);
 
             if (users.Count == 0)
             {
@@ -63,13 +63,13 @@ public class UserTool(ITaigaApi api, IAuthService authService) : BaseTool(authSe
         }
     }
 
-    [McpServerTool, Description("Get user statistics")]
+    [McpServerTool(Name = "GetUserStats", ReadOnly = true, Destructive = false), Description("Get user statistics")]
     public async Task<string> StatsAsync([Description("User ID")] int id)
     {
         try
         {
             await EnsureAuthenticated();
-            var stats = await api.GetUserStatsAsync(id);
+            var stats = await Api.GetUserStatsAsync(id);
             var result = $"User Statistics (ID: {id}):\n";
             foreach (var stat in stats)
             {
