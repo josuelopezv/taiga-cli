@@ -1,6 +1,7 @@
 ﻿global using Taiga.Api.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Taiga.Api;
+using Taiga.Api.Models;
 
 namespace Taiga.Mcp.Tools;
 
@@ -16,21 +17,41 @@ public abstract class BaseTool(IServiceProvider serviceProvider)
             throw new InvalidOperationException("Please run auth login first.");
     }
 
-    protected async Task<int> GetStatusFromName(string name, StatusType statusType, int projectId) => statusType switch
+    protected async Task<int> GetStatusFromName(string name, StatusType statusType, int projectId)
     {
-        StatusType.IssueStatus => (await Api.GetIssueStatusesAsync(projectId)).FirstOrDefault(s => s.Name == name)?.Id,
-        StatusType.TaskStatus => (await Api.GetTaskStatusesAsync(projectId)).FirstOrDefault(s => s.Name == name)?.Id,
-        StatusType.UserStoryStatus => (await Api.GetUserStoryStatusesAsync(projectId)).FirstOrDefault(s => s.Name == name)?.Id,
-        StatusType.EpicStatus => (await Api.GetEpicStatusesAsync(projectId)).FirstOrDefault(s => s.Name == name)?.Id,
-        StatusType.IssueType => (await Api.GetIssueTypesAsync(projectId)).FirstOrDefault(s => s.Name == name)?.Id,
-        StatusType.Severity => (await Api.GetSeveritiesAsync(projectId)).FirstOrDefault(s => s.Name == name)?.Id,
-        StatusType.Priority => (await Api.GetPrioritiesAsync(projectId)).FirstOrDefault(s => s.Name == name)?.Id,
-        _ => null
-    } ?? throw new Exception($"Status {name} not found for type {statusType} in project {projectId}, Run GetAvailableStatus Tool to get the list of available statuses");
+        var statuses = await GetStatusesAsync(statusType, projectId);
+        var status = statuses.FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+        if (status == null)
+        {
+            var availableNames = string.Join(", ", statuses.Select(s => s.Name));
+            throw new KeyNotFoundException($"Status '{name}' not found for type {statusType} in project {projectId}. Available options: {availableNames}");
+        }
+        return status.Id;
+    }
 
-    protected async Task<int> GetUserIdFromUsername(string username, int projectId) =>
-        (await Api.GetUsersAsync(projectId)).FirstOrDefault(u => u.Username == username)?.Id
-        ?? throw new Exception($"User {username} not found in project {projectId}. Run ListUsers tool to see available users.");
+    private async Task<List<Status>> GetStatusesAsync(StatusType statusType, int projectId) => statusType switch
+    {
+        StatusType.IssueStatus => await Api.GetIssueStatusesAsync(projectId),
+        StatusType.TaskStatus => await Api.GetTaskStatusesAsync(projectId),
+        StatusType.UserStoryStatus => await Api.GetUserStoryStatusesAsync(projectId),
+        StatusType.EpicStatus => await Api.GetEpicStatusesAsync(projectId),
+        StatusType.IssueType => await Api.GetIssueTypesAsync(projectId),
+        StatusType.Severity => await Api.GetSeveritiesAsync(projectId),
+        StatusType.Priority => await Api.GetPrioritiesAsync(projectId),
+        _ => throw new ArgumentException($"Unsupported status type: {statusType}")
+    };
+
+    protected async Task<int> GetUserIdFromUsername(string username, int projectId)
+    {
+        var users = await Api.GetUsersAsync(projectId);
+        var user = users.FirstOrDefault(u => string.Equals(u.Username, username, StringComparison.OrdinalIgnoreCase));
+        if (user == null)
+        {
+            var availableUsernames = string.Join(", ", users.Select(u => u.Username));
+            throw new KeyNotFoundException($"User '{username}' not found in project {projectId}. Available users: {availableUsernames}");
+        }
+        return user.Id;
+    }
 
 }
 
