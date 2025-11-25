@@ -10,6 +10,7 @@ internal class Program
         var builder = Host.CreateApplicationBuilder(args);
 
         builder.Logging.AddConsole(consoleLogOptions => consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Debug);
+        builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
         builder.Services
             .AddMcpServer()

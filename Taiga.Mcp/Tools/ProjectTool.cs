@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 using Taiga.Api;
@@ -12,11 +13,14 @@ public class ProjectTool(IServiceProvider serviceProvider) : BaseTool(servicePro
     {
         try
         {
+            Logger.LogInformation("Listing all projects");
             await EnsureAuthenticated();
             var projects = await Api.GetProjectsAsync();
+            Logger.LogDebug("Retrieved {Count} projects", projects.Count);
 
             if (projects.Count == 0)
             {
+                Logger.LogInformation("No projects found");
                 return "No projects found.";
             }
 
@@ -25,10 +29,12 @@ public class ProjectTool(IServiceProvider serviceProvider) : BaseTool(servicePro
             {
                 result += project.ToString() + "\n\n";
             }
+            Logger.LogInformation("Successfully listed {Count} projects", projects.Count);
             return result;
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error fetching projects");
             return $"Error fetching projects: {ex.Message}";
         }
     }

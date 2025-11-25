@@ -1,9 +1,10 @@
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 
 namespace Taiga.Mcp.Tools;
 
-//[McpServerToolType]
+[McpServerToolType]
 public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
 {
     [McpServerTool(Name = "ListTasks", ReadOnly = true, Destructive = false), Description("List tasks (optionally filtered by project or user story)")]
@@ -13,17 +14,24 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
     {
         try
         {
+            Logger.LogInformation("Listing tasks for project {ProjectId}, user story {UserStoryId}", project, userStory);
             await EnsureAuthenticated();
             if (userStory.HasValue)
             {
                 if (!project.HasValue)
+                {
+                    Logger.LogWarning("Project ID must be specified when filtering by User Story ID");
                     return "Project ID must be specified when filtering by User Story ID.";
+                }
+                Logger.LogDebug("Resolving user story {UserStoryId} to get actual ID", userStory.Value);
                 userStory = (await Api.GetUserStoryAsync(userStory.Value, project)).Id; // change from refId to id
             }
             var tasks = await Api.GetTasksAsync(project, userStory);
+            Logger.LogDebug("Retrieved {Count} tasks", tasks.Count);
 
             if (tasks.Count == 0)
             {
+                Logger.LogInformation("No tasks found for the specified filters");
                 return "No tasks found.";
             }
 
@@ -32,10 +40,12 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
             {
                 result += task.ToString() + "\n\n";
             }
+            Logger.LogInformation("Successfully listed {Count} tasks", tasks.Count);
             return result;
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error fetching tasks for project {ProjectId}, user story {UserStoryId}", project, userStory);
             return $"Error fetching tasks: {ex.Message}";
         }
     }
@@ -45,12 +55,15 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
     {
         try
         {
+            Logger.LogInformation("Getting task {TaskId} from project {ProjectId}", id, project);
             await EnsureAuthenticated();
             var task = await Api.GetTaskAsync(id, project);
+            Logger.LogInformation("Successfully retrieved task {TaskId}", id);
             return $"Task Details:\n{task}";
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error fetching task {TaskId} from project {ProjectId}", id, project);
             return $"Error fetching task: {ex.Message}";
         }
     }
@@ -67,6 +80,7 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
     {
         try
         {
+            Logger.LogInformation("Creating new task in project {ProjectId} with subject '{Subject}'", project, subject);
             await EnsureAuthenticated();
             var data = new Dictionary<string, object>
             {
@@ -78,13 +92,20 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
                 data["description"] = description;
 
             if (!string.IsNullOrWhiteSpace(status))
-                data["status"] = GetStatusFromName(status, StatusType.TaskStatus, project);
+            {
+                Logger.LogDebug("Setting status for task: {Status}", status);
+                data["status"] = await GetStatusFromName(status, StatusType.TaskStatus, project);
+            }
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
-                data["assigned_to"] = GetUserIdFromUsername(assignedTo, project);
+            {
+                Logger.LogDebug("Assigning task to user: {AssignedTo}", assignedTo);
+                data["assigned_to"] = await GetUserIdFromUsername(assignedTo, project);
+            }
 
             if (userStory.HasValue)
             {
+                Logger.LogDebug("Associating task with user story {UserStoryId}", userStory.Value);
                 var story = await Api.GetUserStoryAsync(userStory.Value, project);
                 data["user_story"] = story.Id;
             }
@@ -92,11 +113,14 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
 
+            Logger.LogDebug("Creating task with {FieldCount} fields", data.Count);
             var task = await Api.CreateTaskAsync(data);
+            Logger.LogInformation("Successfully created task with ID {TaskId}", task.Id);
             return $"Task created successfully:\n{task}";
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error creating task in project {ProjectId}", project);
             return $"Error creating task: {ex.Message}";
         }
     }
@@ -114,9 +138,11 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
     {
         try
         {
+            Logger.LogInformation("Editing task {TaskId} in project {ProjectId}", refid, project);
             await EnsureAuthenticated();
             // Get the task by ref to obtain its ID
             var task = await Api.GetTaskAsync(refid, project);
+            Logger.LogDebug("Retrieved task {TaskId} for editing", task.Id);
 
             var data = new Dictionary<string, object>();
 
@@ -127,10 +153,16 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
                 data["description"] = description;
 
             if (!string.IsNullOrWhiteSpace(status))
-                data["status"] = GetStatusFromName(status, StatusType.TaskStatus, task.Project);
+            {
+                Logger.LogDebug("Updating status for task {TaskId}: {Status}", task.Id, status);
+                data["status"] = await GetStatusFromName(status, StatusType.TaskStatus, task.Project);
+            }
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
-                data["assigned_to"] = GetUserIdFromUsername(assignedTo, task.Project);
+            {
+                Logger.LogDebug("Reassigning task {TaskId} to user: {AssignedTo}", task.Id, assignedTo);
+                data["assigned_to"] = await GetUserIdFromUsername(assignedTo, task.Project);
+            }
 
             if (userStory.HasValue)
                 data["user_story"] = userStory.Value;
@@ -140,14 +172,18 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
 
             if (data.Count == 0)
             {
+                Logger.LogWarning("No fields specified for updating task {TaskId}", task.Id);
                 return "No fields to update. Please specify at least one field to modify.";
             }
 
+            Logger.LogDebug("Updating task {TaskId} with {FieldCount} fields", task.Id, data.Count);
             var updatedTask = await Api.UpdateTaskAsync(task.Id, data);
+            Logger.LogInformation("Successfully updated task {TaskId}", task.Id);
             return $"Task updated successfully:\n{updatedTask}";
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error updating task {TaskId} in project {ProjectId}", refid, project);
             return $"Error updating task: {ex.Message}";
         }
     }

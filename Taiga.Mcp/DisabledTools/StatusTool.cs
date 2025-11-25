@@ -1,7 +1,10 @@
 using ModelContextProtocol.Server;
 using System.ComponentModel;
+using Taiga.Mcp.Tools;
 
-namespace Taiga.Mcp.Tools;
+namespace Taiga.Mcp.DisabledTools;
+
+using Microsoft.Extensions.Logging;
 
 //[McpServerToolType]
 public class StatusTool(IServiceProvider serviceProvider) : BaseTool(serviceProvider)
@@ -9,21 +12,37 @@ public class StatusTool(IServiceProvider serviceProvider) : BaseTool(serviceProv
     [McpServerTool(Name = "GetAvailableStatus", ReadOnly = true, Destructive = false), Description("Get available status options")]
     public async Task<string> GetAvailableStatus([Description("Project ID to filter by")] int projectId)
     {
-        await EnsureAuthenticated();
-        var result = "";
-        result += "Available Severities:\n";
-        result += string.Join(", ", await Api.GetSeveritiesAsync(projectId));
-        result += "Available Priorities:\n";
-        result += string.Join(", ", await Api.GetPrioritiesAsync(projectId));
-        result += "Available Issue Statuses:\n";
-        result += string.Join(", ", await Api.GetIssueStatusesAsync(projectId));
-        result += "Available Issue Types:\n";
-        result += string.Join(", ", await Api.GetIssueTypesAsync(projectId));
-        result += "Available Task Statuses:\n";
-        result += string.Join(", ", await Api.GetTaskStatusesAsync(projectId));
-        result += "Available User Story Statuses:\n";
-        result += string.Join(", ", await Api.GetUserStoryStatusesAsync(projectId));
-        return result;
+        try
+        {
+            Logger.LogInformation("Getting available status options for project {ProjectId}", projectId);
+            await EnsureAuthenticated();
+            var result = "";
+            Logger.LogDebug("Fetching severities for project {ProjectId}", projectId);
+            result += "Available Severities:\n";
+            result += string.Join(", ", await Api.GetSeveritiesAsync(projectId));
+            Logger.LogDebug("Fetching priorities for project {ProjectId}", projectId);
+            result += "Available Priorities:\n";
+            result += string.Join(", ", await Api.GetPrioritiesAsync(projectId));
+            Logger.LogDebug("Fetching issue statuses for project {ProjectId}", projectId);
+            result += "Available Issue Statuses:\n";
+            result += string.Join(", ", await Api.GetIssueStatusesAsync(projectId));
+            Logger.LogDebug("Fetching issue types for project {ProjectId}", projectId);
+            result += "Available Issue Types:\n";
+            result += string.Join(", ", await Api.GetIssueTypesAsync(projectId));
+            Logger.LogDebug("Fetching task statuses for project {ProjectId}", projectId);
+            result += "Available Task Statuses:\n";
+            result += string.Join(", ", await Api.GetTaskStatusesAsync(projectId));
+            Logger.LogDebug("Fetching user story statuses for project {ProjectId}", projectId);
+            result += "Available User Story Statuses:\n";
+            result += string.Join(", ", await Api.GetUserStoryStatusesAsync(projectId));
+            Logger.LogInformation("Successfully retrieved all status options for project {ProjectId}", projectId);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error getting available status options for project {ProjectId}", projectId);
+            return $"Error getting available status options: {ex.Message}";
+        }
     }
 
     //[McpServerTool(Name = "ListSeverities", ReadOnly = true, Destructive = false), Description("List severities")]

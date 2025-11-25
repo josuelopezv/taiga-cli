@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 
@@ -13,14 +14,18 @@ public class SearchTool(IServiceProvider serviceProvider) : BaseTool(serviceProv
     {
         try
         {
+            Logger.LogInformation("Searching project {ProjectId} for text '{SearchText}'", project, text);
             await EnsureAuthenticated();
             var results = await Api.SearchProjectAsync(project, text);
+            Logger.LogDebug("Found {Count} search results", results.Count);
             var result = $"{results.Count} Search Results in Project {project} for '{text}':\n";
             result += results.ToString();
+            Logger.LogInformation("Successfully completed search in project {ProjectId}", project);
             return result;
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error searching project {ProjectId} for text '{SearchText}'", project, text);
             return $"Error performing search: {ex.Message}";
         }
     }

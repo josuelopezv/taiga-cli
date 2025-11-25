@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 using Taiga.Api.Models;
@@ -13,21 +14,28 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
     {
         try
         {
+            Logger.LogInformation("Listing user stories for project {ProjectId}, epic {EpicId}", project, epic);
             await EnsureAuthenticated();
             if (epic.HasValue)
             {
                 if (!project.HasValue)
+                {
+                    Logger.LogWarning("Project ID must be specified when filtering by Epic ID");
                     return "Project ID must be specified when filtering by Epic ID.";
+                }
+                Logger.LogDebug("Resolving epic {EpicId} to get actual ID", epic.Value);
                 epic = (await Api.GetEpicAsync(epic.Value, project)).Id; // change from refId to id
             }
 
             var stories = await Api.GetUserStoriesAsync(project, epic);
+            Logger.LogDebug("Retrieved {Count} user stories", stories.Count);
 
             if (stories.Count == 0)
             {
                 var message = project.HasValue
                     ? $"No user stories found for project {project}."
                     : "No user stories found.";
+                Logger.LogInformation("No user stories found for the specified filters");
                 return message;
             }
 
@@ -36,10 +44,12 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
             {
                 result += story.ToString() + "\n\n";
             }
+            Logger.LogInformation("Successfully listed {Count} user stories", stories.Count);
             return result;
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error fetching user stories for project {ProjectId}, epic {EpicId}", project, epic);
             return $"Error fetching user stories: {ex.Message}";
         }
     }
@@ -49,12 +59,15 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
     {
         try
         {
+            Logger.LogInformation("Getting user story {UserStoryId} from project {ProjectId}", id, project);
             await EnsureAuthenticated();
             var story = await Api.GetUserStoryAsync(id, project);
+            Logger.LogInformation("Successfully retrieved user story {UserStoryId}", id);
             return $"User Story Details:\n{story}";
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error fetching user story {UserStoryId} from project {ProjectId}", id, project);
             return $"Error fetching user story: {ex.Message}";
         }
     }
@@ -71,6 +84,7 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
     {
         try
         {
+            Logger.LogInformation("Creating new user story in project {ProjectId} with subject '{Subject}'", project, subject);
             await EnsureAuthenticated();
             var data = new Dictionary<string, object>
             {
@@ -82,22 +96,31 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
                 data["description"] = description;
 
             if (!string.IsNullOrWhiteSpace(status))
-                data["status"] = GetStatusFromName(status, StatusType.UserStoryStatus, project);
+            {
+                Logger.LogDebug("Setting status for user story: {Status}", status);
+                data["status"] = await GetStatusFromName(status, StatusType.UserStoryStatus, project);
+            }
 
             if (points != null)
                 data["points"] = points;
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
-                data["assigned_to"] = GetUserIdFromUsername(assignedTo, project);
+            {
+                Logger.LogDebug("Assigning user story to user: {AssignedTo}", assignedTo);
+                data["assigned_to"] = await GetUserIdFromUsername(assignedTo, project);
+            }
 
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
 
+            Logger.LogDebug("Creating user story with {FieldCount} fields", data.Count);
             var story = await Api.CreateUserStoryAsync(data);
+            Logger.LogInformation("Successfully created user story with ID {UserStoryId}", story.Id);
             return $"User story created successfully:\n{story}";
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error creating user story in project {ProjectId}", project);
             return $"Error creating user story: {ex.Message}";
         }
     }
@@ -115,9 +138,11 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
     {
         try
         {
+            Logger.LogInformation("Editing user story {UserStoryId} in project {ProjectId}", refid, project);
             await EnsureAuthenticated();
             // Get the user story by ref to obtain its ID
             var story = await Api.GetUserStoryAsync(refid, project);
+            Logger.LogDebug("Retrieved user story {UserStoryId} for editing", story.Id);
 
             var data = new Dictionary<string, object>();
 
@@ -128,27 +153,37 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
                 data["description"] = description;
 
             if (!string.IsNullOrWhiteSpace(status))
-                data["status"] = GetStatusFromName(status, StatusType.UserStoryStatus, story.Project);
+            {
+                Logger.LogDebug("Updating status for user story {UserStoryId}: {Status}", story.Id, status);
+                data["status"] = await GetStatusFromName(status, StatusType.UserStoryStatus, story.Project);
+            }
 
             if (points != null)
                 data["points"] = points;
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
-                data["assigned_to"] = GetUserIdFromUsername(assignedTo, story.Project);
+            {
+                Logger.LogDebug("Reassigning user story {UserStoryId} to user: {AssignedTo}", story.Id, assignedTo);
+                data["assigned_to"] = await GetUserIdFromUsername(assignedTo, story.Project);
+            }
 
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
 
             if (data.Count == 0)
             {
+                Logger.LogWarning("No fields specified for updating user story {UserStoryId}", story.Id);
                 return "No fields to update. Please specify at least one field to modify.";
             }
 
+            Logger.LogDebug("Updating user story {UserStoryId} with {FieldCount} fields", story.Id, data.Count);
             var updatedStory = await Api.UpdateUserStoryAsync(story.Id, data);
+            Logger.LogInformation("Successfully updated user story {UserStoryId}", story.Id);
             return $"User story updated successfully:\n{updatedStory}";
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error updating user story {UserStoryId} in project {ProjectId}", refid, project);
             return $"Error updating user story: {ex.Message}";
         }
     }
