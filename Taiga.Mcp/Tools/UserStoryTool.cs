@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
+using System.Text.Json;
 
 namespace Taiga.Mcp.Tools;
 
@@ -112,7 +113,7 @@ public class UserStoryTool(IServiceProvider serviceProvider) : BaseTool(serviceP
             if (milestone.HasValue)
                 data["milestone"] = milestone.Value;
 
-            Logger.LogDebug("Creating user story with {FieldCount} fields", data.Count);
+            Logger.LogDebug("Creating user story with {FieldCount} fields", JsonSerializer.Serialize(data));
             var story = await Api.CreateUserStoryAsync(data);
             Logger.LogInformation("Successfully created user story with ID {UserStoryId}", story.Id);
             return $"User story created successfully:\n{story}";
