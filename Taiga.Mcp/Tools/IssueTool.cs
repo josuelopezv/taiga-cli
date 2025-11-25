@@ -65,6 +65,7 @@ public class IssueTool(IServiceProvider serviceProvider) : BaseTool(serviceProvi
         [Description("Issue type Name (e.g. \"Bug\", \"Feature\", \"Task\")")] string? type = null,
         [Description("Priority Name (e.g. \"Low\", \"Medium\", \"High\")")] string? priority = null,
         [Description("Severity Name (e.g. \"Minor\", \"Major\", \"Critical\")")] string? severity = null,
+        [Description("Tags (comma-separated)")] string? tags = null,
         [Description("Assigned username")] string? assignedTo = null)
     {
         try
@@ -85,6 +86,9 @@ public class IssueTool(IServiceProvider serviceProvider) : BaseTool(serviceProvi
                 Logger.LogDebug("Setting status for issue: {Status}", status);
                 data["status"] = await GetStatusFromName(status, StatusType.IssueStatus, project);
             }
+
+            if (!string.IsNullOrWhiteSpace(tags))
+                data["tags"] = tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
 
             if (!string.IsNullOrWhiteSpace(type))
             {
@@ -132,6 +136,7 @@ public class IssueTool(IServiceProvider serviceProvider) : BaseTool(serviceProvi
         [Description("Issue type Name (e.g. \"Bug\", \"Feature\", \"Task\")")] string? type = null,
         [Description("Priority Name (e.g. \"Low\", \"Medium\", \"High\")")] string? priority = null,
         [Description("Severity Name (e.g. \"Minor\", \"Major\", \"Critical\")")] string? severity = null,
+        [Description("Tags (comma-separated)")] string? tags = null,
         [Description("Assigned username")] string? assignedTo = null)
     {
         try
@@ -155,6 +160,9 @@ public class IssueTool(IServiceProvider serviceProvider) : BaseTool(serviceProvi
                 Logger.LogDebug("Updating status for issue {IssueId}: {Status}", issue.Id, status);
                 data["status"] = await GetStatusFromName(status, StatusType.IssueStatus, issue.Project);
             }
+
+            if (!string.IsNullOrWhiteSpace(tags))
+                data["tags"] = tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
 
             if (!string.IsNullOrWhiteSpace(type))
             {

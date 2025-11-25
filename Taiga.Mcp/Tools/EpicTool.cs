@@ -62,6 +62,7 @@ public class EpicTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
     [Description("Subject/title")] string subject,
     [Description("Description (support markdown)")] string? description = null,
     [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+    [Description("Tags (comma-separated)")] string? tags = null,
     [Description("Assigned username")] string? assignedTo = null)
     {
         try
@@ -82,6 +83,9 @@ public class EpicTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
                 Logger.LogDebug("Setting status for epic: {Status}", status);
                 data["status"] = await GetStatusFromName(status, StatusType.EpicStatus, project);
             }
+
+            if (!string.IsNullOrWhiteSpace(tags))
+                data["tags"] = tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
             {
@@ -108,6 +112,7 @@ public class EpicTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
         [Description("Subject/title")] string? subject = null,
         [Description("Description (support markdown)")] string? description = null,
         [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Tags (comma-separated)")] string? tags = null,
         [Description("Assigned username")] string? assignedTo = null)
     {
         try
@@ -131,6 +136,9 @@ public class EpicTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
                 Logger.LogDebug("Updating status for epic {EpicId}: {Status}", epic.Id, status);
                 data["status"] = await GetStatusFromName(status, StatusType.EpicStatus, epic.Project);
             }
+
+            if (!string.IsNullOrWhiteSpace(tags))
+                data["tags"] = tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
             {

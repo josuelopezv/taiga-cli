@@ -73,7 +73,8 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
         [Description("Project ID")] int project,
         [Description("Subject/title")] string subject,
         [Description("Description")] string? description = null,
-        [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null, // todo change to status name, use api to get id based on name
+        [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Tags (comma-separated)")] string? tags = null,
         [Description("Assigned username")] string? assignedTo = null,
         [Description("User Story ID")] int? userStory = null,
         [Description("Milestone ID")] int? milestone = null)
@@ -96,6 +97,9 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
                 Logger.LogDebug("Setting status for task: {Status}", status);
                 data["status"] = await GetStatusFromName(status, StatusType.TaskStatus, project);
             }
+
+            if (!string.IsNullOrWhiteSpace(tags))
+                data["tags"] = tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
             {
@@ -132,6 +136,7 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
         [Description("Subject/title")] string? subject = null,
         [Description("Description")] string? description = null,
         [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
+        [Description("Tags (comma-separated)")] string? tags = null,
         [Description("Assigned username")] string? assignedTo = null,
         [Description("User Story ID")] int? userStory = null,
         [Description("Milestone ID")] int? milestone = null)
@@ -157,6 +162,9 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
                 Logger.LogDebug("Updating status for task {TaskId}: {Status}", task.Id, status);
                 data["status"] = await GetStatusFromName(status, StatusType.TaskStatus, task.Project);
             }
+
+            if (!string.IsNullOrWhiteSpace(tags))
+                data["tags"] = tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
 
             if (!string.IsNullOrWhiteSpace(assignedTo))
             {
