@@ -77,8 +77,8 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
         [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
         [Description("Tags (comma-separated)")] string? tags = null,
         [Description("Assigned username")] string? assignedTo = null,
-        [Description("User Story ID")] int? userStory = null,
-        [Description("Milestone ID")] int? milestone = null)
+        [Description("User Story ID (default 0)")] int userStory = default,
+        [Description("Milestone ID (default 0)")] int milestone = default)
     {
         try
         {
@@ -108,15 +108,15 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
                 data["assigned_to"] = await GetUserIdFromUsername(assignedTo, project);
             }
 
-            if (userStory.HasValue)
+            if (userStory != default)
             {
-                Logger.LogDebug("Associating task with user story {UserStoryId}", userStory.Value);
-                var story = await Api.GetUserStoryAsync(userStory.Value, project);
+                Logger.LogDebug("Associating task with user story {UserStoryId}", userStory);
+                var story = await Api.GetUserStoryAsync(userStory, project);
                 data["user_story"] = story.Id;
             }
 
-            if (milestone.HasValue)
-                data["milestone"] = milestone.Value;
+            if (milestone != default)
+                data["milestone"] = milestone;
 
             Logger.LogDebug("Creating task with {FieldCount} fields", JsonSerializer.Serialize(data.Count));
             var task = await Api.CreateTaskAsync(data);
@@ -139,8 +139,8 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
         [Description("Status Name (e.g. \"New\", \"In Progress\")")] string? status = null,
         [Description("Tags (comma-separated)")] string? tags = null,
         [Description("Assigned username")] string? assignedTo = null,
-        [Description("User Story ID")] int? userStory = null,
-        [Description("Milestone ID")] int? milestone = null)
+        [Description("User Story ID (default 0)")] int userStory = default,
+        [Description("Milestone ID (default 0)")] int milestone = default)
     {
         try
         {
@@ -173,11 +173,15 @@ public class TaskTool(IServiceProvider serviceProvider) : BaseTool(serviceProvid
                 data["assigned_to"] = await GetUserIdFromUsername(assignedTo, task.Project);
             }
 
-            if (userStory.HasValue)
-                data["user_story"] = userStory.Value;
+            if (userStory != default)
+            {
+                Logger.LogDebug("Associating task with user story {UserStoryId}", userStory);
+                var story = await Api.GetUserStoryAsync(userStory, project);
+                data["user_story"] = story.Id;
+            }
 
-            if (milestone.HasValue)
-                data["milestone"] = milestone.Value;
+            if (milestone != default)
+                data["milestone"] = milestone;
 
             if (data.Count == 0)
             {
