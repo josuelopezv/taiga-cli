@@ -9,7 +9,7 @@
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>taiga-mcp</ToolCommandName>
 		<PackageId>taiga-mcp</PackageId>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<Authors>josuelopezv</Authors>
 		<Product>Taiga MCP</Product>
 		<Description>A MCP interface for Taiga project management</Description>
