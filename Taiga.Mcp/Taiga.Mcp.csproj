@@ -26,6 +26,9 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.*" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	<ItemGroup>
 		<ProjectReference Include="..\Taiga.Api\Taiga.Api.csproj" />
 	</ItemGroup>
 </Project>
